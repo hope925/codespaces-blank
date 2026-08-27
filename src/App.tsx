@@ -28,10 +28,12 @@ import {
 
 type Route = 'home' | 'alerts' | 'preparedness' | 'shelters' | 'contacts'
 type Severity = 'warning' | 'watch' | 'all-clear'
+type AlertFilter = 'all' | 'active' | 'flooding' | 'wind'
 
 type Alert = {
   id: string
   severity: Severity
+  category: Exclude<AlertFilter, 'all' | 'active'>
   label: string
   title: string
   summary: string
@@ -45,6 +47,7 @@ const alerts: Alert[] = [
   {
     id: 'flash-flood-st-andrew',
     severity: 'warning',
+    category: 'flooding',
     label: 'Flash flood warning',
     title: 'Move to higher ground',
     summary: 'Heavy rainfall may cause sudden flooding in low-lying areas of St. Andrew and Kingston.',
@@ -56,6 +59,7 @@ const alerts: Alert[] = [
   {
     id: 'coastal-wind-watch',
     severity: 'watch',
+    category: 'wind',
     label: 'Coastal wind watch',
     title: 'Rough seas expected',
     summary: 'Strong winds and rough seas are expected along the south coast through tonight.',
@@ -218,7 +222,22 @@ function AlertCard({ alert, onClick }: { alert: Alert; onClick: () => void }) {
 }
 
 function AlertsPage({ openAlert }: { openAlert: (alert: Alert) => void }) {
-  return <PageIntro eyebrow="Stay informed" title="Alerts" copy="Official-style updates and clear actions for hazards across Jamaica." action={<span className="source-badge"><ShieldCheck size={15} /> Verified source</span>}><div className="filter-row"><button className="filter active">All alerts</button><button className="filter">Active now</button><button className="filter">Flooding</button><button className="filter">Wind & storms</button></div><div className="alert-list alert-page-list">{alerts.map((alert) => <AlertCard key={alert.id} alert={alert} onClick={() => openAlert(alert)} />)}<div className="past-alert"><span className="past-icon"><Check /></span><div><strong>All clear · Tropical Storm Watch</strong><span>Issued Jun 04, 2025 · Event resolved</span></div></div></div></PageIntro>
+  const [filter, setFilter] = useState<AlertFilter>('all')
+  const visibleAlerts = filter === 'all'
+    ? alerts
+    : filter === 'active'
+      ? alerts.filter((alert) => alert.severity !== 'all-clear')
+      : alerts.filter((alert) => alert.category === filter)
+  const showPastAlert = filter === 'all'
+
+  const filters: { value: AlertFilter; label: string }[] = [
+    { value: 'all', label: 'All alerts' },
+    { value: 'active', label: 'Active now' },
+    { value: 'flooding', label: 'Flooding' },
+    { value: 'wind', label: 'Wind & storms' },
+  ]
+
+  return <PageIntro eyebrow="Stay informed" title="Alerts" copy="Official-style updates and clear actions for hazards across Jamaica." action={<span className="source-badge"><ShieldCheck size={15} /> Verified source</span>}><div className="filter-row" role="group" aria-label="Filter alerts">{filters.map(({ value, label }) => <button key={value} className={filter === value ? 'filter active' : 'filter'} onClick={() => setFilter(value)} aria-pressed={filter === value}>{label}</button>)}</div><div className="alert-list alert-page-list">{visibleAlerts.map((alert) => <AlertCard key={alert.id} alert={alert} onClick={() => openAlert(alert)} />)}{showPastAlert && <div className="past-alert"><span className="past-icon"><Check /></span><div><strong>All clear · Tropical Storm Watch</strong><span>Issued Jun 04, 2025 · Event resolved</span></div></div>}{visibleAlerts.length === 0 && <div className="past-alert"><span className="past-icon"><Info size={17} /></span><div><strong>No matching alerts</strong><span>There are no {filter === 'active' ? 'active' : filter} alerts right now.</span></div></div>}</div></PageIntro>
 }
 
 function PreparednessPage({ checked, toggleChecklist }: { checked: string[]; toggleChecklist: (item: string) => void }) {
