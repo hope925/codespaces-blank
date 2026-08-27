@@ -13,6 +13,7 @@ import {
   ExternalLink,
   Flame,
   HeartPulse,
+  Hospital,
   House,
   History,
   Info,
@@ -21,6 +22,7 @@ import {
   MessageCircle,
   Navigation,
   Phone,
+  Plus,
   Radio,
   Search,
   Share2,
@@ -91,6 +93,16 @@ const shelters = [
   { name: 'St. Jago High School', parish: 'St. Catherine', status: 'Open', capacity: '120 spaces', features: 'Accessible · Medical support' },
   { name: 'Mona High School', parish: 'St. Andrew', status: 'Open', capacity: '80 spaces', features: 'Medical support' },
   { name: 'National Arena', parish: 'Kingston', status: 'At capacity', capacity: 'No spaces', features: 'Accessible · Pet-friendly' },
+]
+
+type MedicalFacility = { id: string; name: string; parish: string; type: string; phone: string; address: string }
+
+const medicalFacilities: MedicalFacility[] = [
+  { id: 'uhwi', name: 'University Hospital of the West Indies', parish: 'Kingston', type: 'Hospital · Emergency care', phone: '(876) 927-1620', address: 'Mona, Kingston 7' },
+  { id: 'victoria-jubilee', name: 'Victoria Jubilee Hospital', parish: 'Kingston', type: 'Hospital · Maternity care', phone: '(876) 928-1380', address: 'South Street, Kingston' },
+  { id: 'spanish-town', name: 'Spanish Town Hospital', parish: 'St. Catherine', type: 'Hospital · Emergency care', phone: '(876) 984-2301', address: 'Wellington Street, Spanish Town' },
+  { id: 'portland-cottage', name: 'Port Antonio Hospital', parish: 'Portland', type: 'Hospital · Emergency care', phone: '(876) 715-8272', address: 'East Street, Port Antonio' },
+  { id: 'manchester-health', name: 'Mandeville Regional Hospital', parish: 'Manchester', type: 'Hospital · Emergency care', phone: '(876) 962-6101', address: 'Hope Road, Mandeville' },
 ]
 
 const disasterHistory: { year: number; type: DisasterType; title: string; severity: string; date: string; areas: string; summary: string }[] = [
@@ -263,7 +275,7 @@ function HomePage({ parish, setParish, navigate, openAlert }: { parish: string; 
 }
 
 function MapPreview({ parish }: { parish: string }) {
-  return <div className="map-preview" aria-label={`Simulated hazard map centered on ${parish}`}><div className="map-water-label">CARIBBEAN SEA</div><div className="island-shape"><span className="parish-chip">{parish}</span><span className="map-road road-one" /><span className="map-road road-two" /><span className="map-marker marker-one"><Droplets size={14} /></span><span className="map-marker marker-two"><Waves size={14} /></span></div><div className="map-legend"><span><i className="legend-dot red" /> Active alert</span><span><i className="legend-dot green" /> Shelter</span></div><span className="map-updated"><Clock3 size={13} /> Updated 2 min ago</span></div>
+  return <div className="map-preview"><iframe title={`Interactive map of Jamaica centered near ${parish}`} src="https://www.openstreetmap.org/export/embed.html?bbox=-78.7%2C17.6%2C-76.0%2C18.6&layer=mapnik&marker=18.1096%2C-77.2975" /><div className="map-overlay-label"><MapPin size={14} /> Jamaica hazard map</div><div className="map-legend"><span><i className="legend-dot red" /> Active alert</span><span><i className="legend-dot green" /> Shelter</span></div><span className="map-updated"><Clock3 size={13} /> Live map · Updated 2 min ago</span></div>
 }
 
 function ActionCard({ icon, title, copy, onClick, accent }: { icon: React.ReactNode; title: string; copy: string; onClick: () => void; accent: string }) {
@@ -332,7 +344,12 @@ function SheltersPage({ parish }: { parish: string }) {
 }
 
 function ContactsPage() {
-  return <PageIntro eyebrow="Help when it matters" title="Emergency contacts" copy="Tap a number to call directly from your phone. For immediate danger, call now." action={<span className="source-badge"><Info size={15} /> Save these numbers</span>}><div className="hotline-grid"><a href="tel:119" className="hotline police"><Siren /><span>Police</span><strong>119</strong><small>National emergency line</small><Phone size={18} /></a><a href="tel:110" className="hotline fire"><Flame /><span>Fire & ambulance</span><strong>110</strong><small>National emergency line</small><Phone size={18} /></a></div><h2 className="subheading">Useful services</h2><div className="contact-list"><Contact name="ODPEM" detail="Disaster preparedness and coordination" number="(876) 906-9674" /><Contact name="JPS" detail="Power outage reporting" number="(888) 225-5577" /><Contact name="NWC" detail="Water emergency line" number="(888) 225-5692" /></div></PageIntro>
+  const [parishSearch, setParishSearch] = useState('')
+  const [facilities, setFacilities] = useState(medicalFacilities)
+  const [isAddFacilityOpen, setIsAddFacilityOpen] = useState(false)
+  const visibleFacilities = facilities.filter((facility) => `${facility.name} ${facility.parish} ${facility.address}`.toLowerCase().includes(parishSearch.toLowerCase()))
+
+  return <PageIntro eyebrow="Help when it matters" title="Emergency contacts" copy="Tap a number to call directly from your phone. For immediate danger, call now." action={<span className="source-badge"><Info size={15} /> Save these numbers</span>}><div className="hotline-grid"><a href="tel:119" className="hotline police"><Siren /><span>Police</span><strong>119</strong><small>National emergency line</small><Phone size={18} /></a><a href="tel:110" className="hotline fire"><Flame /><span>Fire & ambulance</span><strong>110</strong><small>National emergency line</small><Phone size={18} /></a></div><h2 className="subheading">Useful services</h2><div className="contact-list"><Contact name="ODPEM" detail="Disaster preparedness and coordination" number="(876) 906-9674" /><Contact name="JPS" detail="Power outage reporting" number="(888) 225-5577" /><Contact name="NWC" detail="Water emergency line" number="(888) 225-5692" /></div><section className="medical-section"><div className="medical-heading"><div><p className="eyebrow">Care near you</p><h2>Medical facilities</h2></div><button className="button secondary" onClick={() => setIsAddFacilityOpen(true)}><Plus size={17} /> Add facility</button></div><label className="medical-search"><Search size={17} /><input value={parishSearch} onChange={(event) => setParishSearch(event.target.value)} placeholder="Search by parish or facility" aria-label="Search medical facilities by parish or facility" /></label><div className="medical-list">{visibleFacilities.map((facility) => <article className="medical-card" key={facility.id}><span className="medical-icon"><Hospital size={19} /></span><div><h3>{facility.name}</h3><p><MapPin size={14} /> {facility.parish} · {facility.address}</p><small>{facility.type}</small></div><a className="medical-call" href={`tel:${facility.phone.replace(/\D/g, '')}`} aria-label={`Call ${facility.name}`}><Phone size={17} /></a></article>)}</div>{visibleFacilities.length === 0 && <div className="past-alert"><span className="past-icon"><Info size={17} /></span><div><strong>No medical facilities found</strong><span>Try another parish or facility name.</span></div></div>}{isAddFacilityOpen && <AddFacilityForm onClose={() => setIsAddFacilityOpen(false)} onAdd={(facility) => { setFacilities((current) => [facility, ...current]); setIsAddFacilityOpen(false) }} />}</section></PageIntro>
 }
 
 function HistoryPage() {
@@ -418,6 +435,21 @@ function SupportPage() {
 
 function Confirmation({ title, copy, onReset }: { title: string; copy: string; onReset: () => void }) {
   return <div className="form-confirmation"><span className="past-icon"><Check size={17} /></span><h3>{title}</h3><p>{copy}</p><button type="button" className="text-button" onClick={onReset}>Submit another response <ArrowRight size={15} /></button></div>
+}
+
+function AddFacilityForm({ onClose, onAdd }: { onClose: () => void; onAdd: (facility: MedicalFacility) => void }) {
+  const [name, setName] = useState('')
+  const [parish, setParish] = useState('Kingston')
+  const [address, setAddress] = useState('')
+  const [phone, setPhone] = useState('')
+  const parishes = ['Kingston', 'St. Catherine', 'St. Andrew', 'Portland', 'Manchester', 'Clarendon', 'St. Thomas']
+
+  const submit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+    onAdd({ id: `facility-${Date.now()}`, name, parish, address, phone, type: 'Community listing' })
+  }
+
+  return <div className="composer-backdrop" role="presentation" onClick={onClose}><form className="signin-modal facility-form" onSubmit={submit} onClick={(event) => event.stopPropagation()}><div className="composer-heading"><div><p className="eyebrow">Medical directory</p><h2>Add a facility</h2></div><button type="button" className="icon-button" onClick={onClose} aria-label="Close add facility form"><X size={19} /></button></div><p className="composer-copy">Add a hospital, clinic, or health centre for neighbours in your parish.</p><label>Facility name<input required value={name} onChange={(event) => setName(event.target.value)} placeholder="Community health centre" /></label><label>Parish<select value={parish} onChange={(event) => setParish(event.target.value)}>{parishes.map((option) => <option key={option}>{option}</option>)}</select></label><label>Address or area<input required value={address} onChange={(event) => setAddress(event.target.value)} placeholder="Street or community" /></label><label>Phone number<input required type="tel" value={phone} onChange={(event) => setPhone(event.target.value)} placeholder="(876) 555-0199" /></label><div className="composer-actions"><button type="button" className="button secondary" onClick={onClose}>Cancel</button><button type="submit" className="button primary"><Plus size={17} /> Add facility</button></div></form></div>
 }
 
 function Contact({ name, detail, number }: { name: string; detail: string; number: string }) { return <a className="contact-row" href={`tel:${number.replace(/\D/g, '')}`}><span className="contact-avatar"><Phone size={17} /></span><span><strong>{name}</strong><small>{detail}</small></span><span className="contact-number">{number}</span><Phone size={17} /></a> }
