@@ -34,6 +34,7 @@ type Severity = 'warning' | 'watch' | 'all-clear'
 type AlertFilter = 'all' | 'active' | 'flooding' | 'wind'
 type DisasterType = 'Hurricane' | 'Earthquake' | 'Flood' | 'Landslide'
 type StoryFocus = 'Survivor experience' | 'Recovery' | 'Rebuilding efforts'
+type PrepPhase = 'Before' | 'During' | 'After'
 
 type Alert = {
   id: string
@@ -289,7 +290,35 @@ function AlertsPage({ openAlert }: { openAlert: (alert: Alert) => void }) {
 }
 
 function PreparednessPage({ checked, toggleChecklist }: { checked: string[]; toggleChecklist: (item: string) => void }) {
-  return <PageIntro eyebrow="Build your readiness" title="Preparedness" copy="Simple steps before, during, and after a disaster. Start with what you can do today." action={<span className="saved-note"><Check size={15} /> Progress saves automatically</span>}><div className="phase-tabs"><button className="active">Before</button><button>During</button><button>After</button></div><div className="guidance-grid"><Guidance icon={<House />} title="Secure your home" copy="Clear drains, trim loose branches, and secure items outdoors." accent="gold" /><Guidance icon={<HeartPulse />} title="Make a family plan" copy="Choose a meeting point and an out-of-parish contact." accent="green" /><Guidance icon={<Radio />} title="Stay informed" copy="Keep a battery radio nearby and follow verified updates." accent="black" /></div><div className="checklist-panel"><div className="checklist-heading"><div><p className="eyebrow">72-hour emergency kit</p><h2>{checked.length} of {checklistItems.length} ready</h2></div><div className="progress-ring" style={{ '--progress': `${(checked.length / checklistItems.length) * 100}%` } as React.CSSProperties}><strong>{Math.round((checked.length / checklistItems.length) * 100)}%</strong></div></div><div className="progress-bar"><span style={{ width: `${(checked.length / checklistItems.length) * 100}%` }} /></div><div className="checklist">{checklistItems.map((item) => <label key={item} className={checked.includes(item) ? 'checked' : ''}><input type="checkbox" checked={checked.includes(item)} onChange={() => toggleChecklist(item)} /><span className="custom-check">{checked.includes(item) && <Check size={14} />}</span><span>{item}</span></label>)}</div></div></PageIntro>
+  const [phase, setPhase] = useState<PrepPhase>('Before')
+  const guidanceByPhase: Record<PrepPhase, { icon: React.ReactNode; title: string; copy: string; accent: string }[]> = {
+    Before: [
+      { icon: <House />, title: 'Secure your home', copy: 'Clear drains, trim loose branches, and secure items outdoors.', accent: 'gold' },
+      { icon: <HeartPulse />, title: 'Make a family plan', copy: 'Choose a meeting point and an out-of-parish contact.', accent: 'green' },
+      { icon: <Radio />, title: 'Stay informed', copy: 'Keep a battery radio nearby and follow verified updates.', accent: 'black' },
+    ],
+    During: [
+      { icon: <House />, title: 'Stay indoors', copy: 'Stay indoors away from windows.', accent: 'gold' },
+      { icon: <Navigation />, title: 'Evacuate when ordered', copy: 'Evacuate to high ground or an ODPEM shelter if ordered.', accent: 'green' },
+      { icon: <Radio />, title: 'Listen for updates', copy: 'Listen to local radio for official emergency updates.', accent: 'black' },
+      { icon: <ShieldCheck />, title: 'Shut off utilities', copy: 'Turn off main electricity, gas, and water lines.', accent: 'gold' },
+      { icon: <Waves />, title: 'Avoid floodwater', copy: 'Never cross flooded roads, gullies, or fords.', accent: 'green' },
+      { icon: <Phone />, title: 'Conserve phone battery', copy: 'Keep phones in waterproof bags and conserve battery.', accent: 'black' },
+      { icon: <AlertTriangle />, title: 'Avoid unstable hazards', copy: 'Avoid downed power lines and unstable structures.', accent: 'gold' },
+    ],
+    After: [
+      { icon: <ShieldCheck />, title: 'Wait for clearance', copy: 'Wait for official ODPEM clearance before going outside.', accent: 'green' },
+      { icon: <HeartPulse />, title: 'Check for injuries', copy: 'Check yourself and others for injuries.', accent: 'gold' },
+      { icon: <HeartPulse />, title: 'Give basic first aid', copy: 'Administer basic first aid where necessary.', accent: 'black' },
+      { icon: <Phone />, title: 'Get medical help', copy: 'Seek professional medical help for severe injuries.', accent: 'green' },
+      { icon: <AlertTriangle />, title: 'Look for hazards', copy: 'Look for external hazards like downed power lines.', accent: 'gold' },
+      { icon: <Waves />, title: 'Stay away from water', copy: 'Stay away from flooded streets and standing water.', accent: 'black' },
+      { icon: <House />, title: 'Inspect your home', copy: 'Inspect your home for structural damage or gas leaks.', accent: 'green' },
+    ],
+  }
+  const phases: PrepPhase[] = ['Before', 'During', 'After']
+
+  return <PageIntro eyebrow="Build your readiness" title="Preparedness" copy="Simple steps before, during, and after a disaster. Start with what you can do today." action={<span className="saved-note"><Check size={15} /> Progress saves automatically</span>}><div className="phase-tabs" role="tablist" aria-label="Preparedness phases">{phases.map((option) => <button key={option} className={phase === option ? 'active' : ''} onClick={() => setPhase(option)} role="tab" aria-selected={phase === option}>{option}</button>)}</div><div className="guidance-grid">{guidanceByPhase[phase].map((guidance) => <Guidance key={guidance.title} {...guidance} />)}</div>{phase === 'Before' && <div className="checklist-panel"><div className="checklist-heading"><div><p className="eyebrow">72-hour emergency kit</p><h2>{checked.length} of {checklistItems.length} ready</h2></div><div className="progress-ring" style={{ '--progress': `${(checked.length / checklistItems.length) * 100}%` } as React.CSSProperties}><strong>{Math.round((checked.length / checklistItems.length) * 100)}%</strong></div></div><div className="progress-bar"><span style={{ width: `${(checked.length / checklistItems.length) * 100}%` }} /></div><div className="checklist">{checklistItems.map((item) => <label key={item} className={checked.includes(item) ? 'checked' : ''}><input type="checkbox" checked={checked.includes(item)} onChange={() => toggleChecklist(item)} /><span className="custom-check">{checked.includes(item) && <Check size={14} />}</span><span>{item}</span></label>)}</div></div>}</PageIntro>
 }
 
 function Guidance({ icon, title, copy, accent }: { icon: React.ReactNode; title: string; copy: string; accent: string }) { return <article className={`guidance ${accent}`}><span>{icon}</span><h3>{title}</h3><p>{copy}</p></article> }
