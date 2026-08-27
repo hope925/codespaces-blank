@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Watch Out JA - History of Disasters</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-tint": "#3f5f92",
+                        "tertiary-fixed": "#ffdbcc",
+                        "error-container": "#ffdad6",
+                        "surface-bright": "#f9f9fc",
+                        "inverse-primary": "#aac7ff",
+                        "surface-dim": "#dadadc",
+                        "primary-fixed-dim": "#aac7ff",
+                        "surface-container-lowest": "#ffffff",
+                        "primary": "#001736",
+                        "surface": "#f9f9fc",
+                        "on-primary-fixed": "#001b3e",
+                        "tertiary-container": "#4f1c01",
+                        "surface-container-high": "#e8e8ea",
+                        "outline": "#747780",
+                        "on-error-container": "#93000a",
+                        "tertiary": "#2e0d00",
+                        "on-tertiary-container": "#ce805b",
+                        "on-secondary-fixed-variant": "#454749",
+                        "surface-container-highest": "#e2e2e5",
+                        "on-tertiary-fixed-variant": "#713617",
+                        "primary-container": "#002b5c",
+                        "on-primary-fixed-variant": "#264779",
+                        "surface-variant": "#e2e2e5",
+                        "on-tertiary": "#ffffff",
+                        "secondary-fixed": "#e2e2e4",
+                        "on-primary": "#ffffff",
+                        "primary-fixed": "#d6e3ff",
+                        "on-error": "#ffffff",
+                        "on-tertiary-fixed": "#351000",
+                        "on-surface-variant": "#43474f",
+                        "on-secondary": "#ffffff",
+                        "surface-container": "#eeeef0",
+                        "tertiary-fixed-dim": "#ffb695",
+                        "on-secondary-container": "#616365",
+                        "inverse-on-surface": "#f0f0f3",
+                        "on-background": "#1a1c1e",
+                        "on-primary-container": "#7594cb",
+                        "secondary-container": "#dfdfe1",
+                        "background": "#f9f9fc",
+                        "surface-container-low": "#f3f3f6",
+                        "secondary": "#5d5e60",
+                        "on-surface": "#1a1c1e",
+                        "outline-variant": "#c4c6d0",
+                        "secondary-fixed-dim": "#c6c6c8",
+                        "on-secondary-fixed": "#1a1c1d",
+                        "inverse-surface": "#2f3133",
+                        "error": "#ba1a1a",
+                        "ja-green": "#009B3A",
+                        "ja-yellow": "#FED100",
+                        "ja-black": "#000000"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "gutter": "16px",
+                        "unit": "4px",
+                        "stack-lg": "32px",
+                        "margin-desktop": "48px",
+                        "margin-mobile": "16px",
+                        "stack-md": "16px",
+                        "stack-sm": "8px"
+                    },
+                    "fontFamily": {
+                        "display-lg-mobile": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "headline-sm": ["Inter"],
+                        "label-caps": ["Inter"],
+                        "body-md": ["Inter"],
+                        "display-lg": ["Inter"],
+                        "status-lg": ["Inter"],
+                        "headline-md": ["Inter"]
+                    },
+                    "fontSize": {
+                        "display-lg-mobile": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+                        "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }],
+                        "headline-sm": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+                        "label-caps": ["14px", { "lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "700" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "display-lg": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "status-lg": ["22px", { "lineHeight": "28px", "fontWeight": "800" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "600" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .timeline-line {
+            width: 2px;
+            background: linear-gradient(to bottom, theme('colors.ja-green'), theme('colors.ja-yellow'), theme('colors.ja-black'));
+        }
+    </style>
+</head>
+<body class="bg-surface-container-lowest text-on-background antialiased min-h-screen flex flex-col pt-16 pb-20">
+<!-- TopAppBar -->
+<header class="bg-primary dark:bg-primary flex justify-between items-center w-full px-margin-mobile md:px-margin-desktop h-16 fixed top-0 z-50 shadow-md">
+<div class="flex flex-col">
+<h1 class="font-status-lg text-status-lg text-on-primary dark:text-on-primary tracking-tight">Watch Out JA</h1>
+<span class="text-xs text-ja-yellow font-bold uppercase tracking-widest">Your Trusted Eye on the Horizon</span>
+</div>
+<div class="flex gap-4">
+<button class="text-on-primary dark:text-on-primary hover:opacity-100 hover:bg-primary-container transition-colors rounded-full p-2">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">notifications</span>
+</button>
+<button class="text-on-primary dark:text-on-primary hover:opacity-100 hover:bg-primary-container transition-colors rounded-full p-2">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">search</span>
+</button>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-grow px-margin-mobile py-stack-md flex flex-col gap-stack-lg max-w-lg mx-auto w-full">
+<!-- Header Section -->
+<section class="text-center pt-stack-sm">
+<h2 class="font-headline-md text-headline-md text-ja-black mb-2">History of Disasters</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">A timeline of significant natural events affecting Jamaica.</p>
+</section>
+<!-- Timeline Section -->
+<section class="relative">
+<!-- Vertical Line -->
+<div class="absolute left-6 top-0 bottom-0 timeline-line -ml-px z-0 rounded-full opacity-50"></div>
+<div class="flex flex-col gap-stack-lg relative z-10">
+<!-- Event 1: Hurricane Gilbert -->
+<div class="flex gap-gutter items-start">
+<div class="flex-shrink-0 w-12 h-12 rounded-full bg-ja-green flex items-center justify-center shadow-sm border-2 border-surface-container-lowest">
+<span class="material-symbols-outlined text-white" style="font-variation-settings: 'FILL' 1;">cyclone</span>
+</div>
+<div class="flex-grow bg-white border border-outline-variant rounded-xl p-stack-md shadow-sm">
+<div class="flex justify-between items-start mb-2">
+<h3 class="font-headline-sm text-headline-sm text-ja-black">Hurricane Gilbert</h3>
+<span class="font-label-caps text-label-caps bg-error-container text-on-error-container px-2 py-1 rounded-md">Cat 5</span>
+</div>
+<div class="flex items-center gap-1 text-on-surface-variant font-body-md text-body-md mb-1">
+<span class="material-symbols-outlined text-sm">calendar_month</span>
+<span>Sept 12, 1988</span>
+</div>
+<div class="flex items-center gap-1 text-on-surface-variant font-body-md text-body-md">
+<span class="material-symbols-outlined text-sm">location_on</span>
+<span>Island-wide</span>
+</div>
+<p class="mt-3 font-body-md text-body-md text-on-surface leading-snug">Devastating Category 5 hurricane that caused massive destruction across the entire island, leading to significant infrastructure damage.</p>
+</div>
+</div>
+<!-- Event 2: Port Royal Earthquake -->
+<div class="flex gap-gutter items-start">
+<div class="flex-shrink-0 w-12 h-12 rounded-full bg-ja-yellow flex items-center justify-center shadow-sm border-2 border-surface-container-lowest">
+<span class="material-symbols-outlined text-ja-black" style="font-variation-settings: 'FILL' 1;">earthquake</span>
+</div>
+<div class="flex-grow bg-white border border-outline-variant rounded-xl p-stack-md shadow-sm">
+<div class="flex justify-between items-start mb-2">
+<h3 class="font-headline-sm text-headline-sm text-ja-black">Port Royal Earthquake</h3>
+<span class="font-label-caps text-label-caps bg-tertiary-container text-on-tertiary-container px-2 py-1 rounded-md">Severe</span>
+</div>
+<div class="flex items-center gap-1 text-on-surface-variant font-body-md text-body-md mb-1">
+<span class="material-symbols-outlined text-sm">calendar_month</span>
+<span>June 7, 1692</span>
+</div>
+<div class="flex items-center gap-1 text-on-surface-variant font-body-md text-body-md">
+<span class="material-symbols-outlined text-sm">location_on</span>
+<span>Port Royal</span>
+</div>
+<p class="mt-3 font-body-md text-body-md text-on-surface leading-snug">A massive earthquake and subsequent tsunami that submerged large parts of Port Royal, significantly altering the coastline.</p>
+</div>
+</div>
+<!-- Event 3: Flood 2001 -->
+<div class="flex gap-gutter items-start">
+<div class="flex-shrink-0 w-12 h-12 rounded-full bg-ja-black flex items-center justify-center shadow-sm border-2 border-surface-container-lowest">
+<span class="material-symbols-outlined text-white" style="font-variation-settings: 'FILL' 1;">flood</span>
+</div>
+<div class="flex-grow bg-white border border-outline-variant rounded-xl p-stack-md shadow-sm">
+<div class="flex justify-between items-start mb-2">
+<h3 class="font-headline-sm text-headline-sm text-ja-black">Portland Floods</h3>
+<span class="font-label-caps text-label-caps bg-primary-container text-on-primary-container px-2 py-1 rounded-md">Major</span>
+</div>
+<div class="flex items-center gap-1 text-on-surface-variant font-body-md text-body-md mb-1">
+<span class="material-symbols-outlined text-sm">calendar_month</span>
+<span>Nov 2001</span>
+</div>
+<div class="flex items-center gap-1 text-on-surface-variant font-body-md text-body-md">
+<span class="material-symbols-outlined text-sm">location_on</span>
+<span>Portland &amp; St. Mary</span>
+</div>
+<p class="mt-3 font-body-md text-body-md text-on-surface leading-snug">Severe flooding affecting northeastern parishes, causing landslides and cutting off communities for days.</p>
+</div>
+</div>
+<!-- Event 4: Hurricane Ivan -->
+<div class="flex gap-gutter items-start">
+<div class="flex-shrink-0 w-12 h-12 rounded-full bg-ja-green flex items-center justify-center shadow-sm border-2 border-surface-container-lowest">
+<span class="material-symbols-outlined text-white" style="font-variation-settings: 'FILL' 1;">cyclone</span>
+</div>
+<div class="flex-grow bg-white border border-outline-variant rounded-xl p-stack-md shadow-sm">
+<div class="flex justify-between items-start mb-2">
+<h3 class="font-headline-sm text-headline-sm text-ja-black">Hurricane Ivan</h3>
+<span class="font-label-caps text-label-caps bg-error-container text-on-error-container px-2 py-1 rounded-md">Cat 4</span>
+</div>
+<div class="flex items-center gap-1 text-on-surface-variant font-body-md text-body-md mb-1">
+<span class="material-symbols-outlined text-sm">calendar_month</span>
+<span>Sept 10, 2004</span>
+</div>
+<div class="flex items-center gap-1 text-on-surface-variant font-body-md text-body-md">
+<span class="material-symbols-outlined text-sm">location_on</span>
+<span>Southern Coast</span>
+</div>
+<p class="mt-3 font-body-md text-body-md text-on-surface leading-snug">Passed just south of the island, bringing hurricane-force winds, heavy rain, and storm surges that battered southern parishes.</p>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 w-full z-50 flex justify-around items-center px-2 py-3 md:hidden bg-surface dark:bg-surface-dim docked full-width bottom-0 rounded-t-xl border-t border-outline-variant dark:border-outline flat no shadows">
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-container-high transition-colors p-1 rounded-lg" href="#">
+<span class="material-symbols-outlined text-2xl mb-1">map</span>
+<span class="font-label-caps text-label-caps text-[10px]">Map</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-container-high transition-colors p-1 rounded-lg" href="#">
+<span class="material-symbols-outlined text-2xl mb-1">warning</span>
+<span class="font-label-caps text-label-caps text-[10px]">Alerts</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-container-high transition-colors p-1 rounded-lg" href="#">
+<span class="material-symbols-outlined text-2xl mb-1">menu_book</span>
+<span class="font-label-caps text-label-caps text-[10px]">Prepare</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-container-high transition-colors p-1 rounded-lg" href="#">
+<span class="material-symbols-outlined text-2xl mb-1">call</span>
+<span class="font-label-caps text-label-caps text-[10px]">Contacts</span>
+</a>
+<!-- Active State: Stories (History) -->
+<a class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-full px-4 py-1 hover:bg-surface-container-high scale-90 transition-transform" href="#">
+<span class="material-symbols-outlined text-2xl mb-1" style="font-variation-settings: 'FILL' 1;">history</span>
+<span class="font-label-caps text-label-caps text-[10px]">Stories</span>
+</a>
+</nav>
+</body></html>

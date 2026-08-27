@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Watch Out JA - Preparedness Guidelines</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-tint": "#009B3A", // Jamaican Green
+                        "tertiary-fixed": "#FED100", // Jamaican Yellow
+                        "error-container": "#ffdad6",
+                        "surface-bright": "#ffffff",
+                        "inverse-primary": "#FED100",
+                        "surface-dim": "#f0f0f3",
+                        "primary-fixed-dim": "#007A2B",
+                        "surface-container-lowest": "#ffffff",
+                        "primary": "#000000", // Black
+                        "surface": "#ffffff", // Pure white background requested
+                        "on-primary-fixed": "#ffffff",
+                        "tertiary-container": "#FED100",
+                        "surface-container-high": "#e8e8ea",
+                        "outline": "#747780",
+                        "on-error-container": "#93000a",
+                        "tertiary": "#FED100",
+                        "on-tertiary-container": "#000000",
+                        "on-secondary-fixed-variant": "#454749",
+                        "surface-container-highest": "#e2e2e5",
+                        "on-tertiary-fixed-variant": "#713617",
+                        "primary-container": "#009B3A", // Green
+                        "on-primary-fixed-variant": "#ffffff",
+                        "surface-variant": "#f0f0f3",
+                        "on-tertiary": "#000000",
+                        "secondary-fixed": "#e2e2e4",
+                        "on-primary": "#ffffff",
+                        "primary-fixed": "#009B3A",
+                        "on-error": "#ffffff",
+                        "on-tertiary-fixed": "#000000",
+                        "on-surface-variant": "#43474f",
+                        "on-secondary": "#ffffff",
+                        "surface-container": "#f9f9fc",
+                        "tertiary-fixed-dim": "#e6bc00",
+                        "on-secondary-container": "#616365",
+                        "inverse-on-surface": "#f0f0f3",
+                        "on-background": "#000000",
+                        "on-primary-container": "#ffffff",
+                        "secondary-container": "#dfdfe1",
+                        "background": "#ffffff",
+                        "surface-container-low": "#f3f3f6",
+                        "secondary": "#009B3A",
+                        "on-surface": "#000000",
+                        "outline-variant": "#c4c6d0",
+                        "secondary-fixed-dim": "#c6c6c8",
+                        "on-secondary-fixed": "#1a1c1d",
+                        "inverse-surface": "#2f3133",
+                        "error": "#ba1a1a",
+                        "brand-green": "#009B3A",
+                        "brand-yellow": "#FED100",
+                        "brand-black": "#000000"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "gutter": "16px",
+                        "unit": "4px",
+                        "stack-lg": "32px",
+                        "margin-desktop": "48px",
+                        "margin-mobile": "16px",
+                        "stack-md": "16px",
+                        "stack-sm": "8px"
+                    },
+                    "fontFamily": {
+                        "display-lg-mobile": ["Sora", "sans-serif"],
+                        "body-lg": ["Sora", "sans-serif"],
+                        "headline-sm": ["Sora", "sans-serif"],
+                        "label-caps": ["Sora", "sans-serif"],
+                        "body-md": ["Sora", "sans-serif"],
+                        "display-lg": ["Sora", "sans-serif"],
+                        "status-lg": ["Sora", "sans-serif"],
+                        "headline-md": ["Sora", "sans-serif"]
+                    },
+                    "fontSize": {
+                        "display-lg-mobile": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+                        "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }],
+                        "headline-sm": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+                        "label-caps": ["14px", { "lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "700" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "display-lg": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "status-lg": ["22px", { "lineHeight": "28px", "fontWeight": "800" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "600" }]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body { background-color: theme('colors.surface'); }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+    </style>
+</head>
+<body class="bg-surface text-on-surface font-body-md min-h-screen pb-24 md:pb-0">
+<!-- TopAppBar from JSON -->
+<header class="bg-primary dark:bg-primary text-on-primary dark:text-on-primary flex justify-between items-center w-full px-margin-mobile md:px-margin-desktop h-16 fixed top-0 z-50 flat no shadows">
+<div class="flex items-center gap-2">
+<span class="font-status-lg text-status-lg text-brand-yellow tracking-tight">Watch Out JA</span>
+<span class="text-xs text-brand-green hidden sm:inline ml-2">Your Trusted Eye on the Horizon</span>
+</div>
+<div class="hidden md:flex gap-4 items-center">
+<a class="text-on-primary-container dark:text-primary-fixed opacity-80 hover:opacity-100 hover:bg-primary-container transition-colors px-2 py-1 rounded" href="#">Map</a>
+<a class="text-on-primary-container dark:text-primary-fixed opacity-80 hover:opacity-100 hover:bg-primary-container transition-colors px-2 py-1 rounded" href="#">Alerts</a>
+<a class="text-on-primary border-b-2 border-on-primary pb-1 hover:opacity-100 hover:bg-primary-container transition-colors px-2 py-1 rounded font-bold text-brand-yellow" href="#">Preparedness</a>
+<a class="text-on-primary-container dark:text-primary-fixed opacity-80 hover:opacity-100 hover:bg-primary-container transition-colors px-2 py-1 rounded" href="#">Contacts</a>
+<a class="text-on-primary-container dark:text-primary-fixed opacity-80 hover:opacity-100 hover:bg-primary-container transition-colors px-2 py-1 rounded" href="#">Stories</a>
+</div>
+<div class="flex items-center gap-4">
+<button class="material-symbols-outlined text-on-primary hover:text-brand-yellow transition-colors" data-icon="notifications">notifications</button>
+<button class="material-symbols-outlined text-on-primary hover:text-brand-yellow transition-colors" data-icon="search">search</button>
+</div>
+</header>
+<main class="pt-20 px-margin-mobile md:px-margin-desktop max-w-7xl mx-auto">
+<!-- Hero Section -->
+<section class="mb-stack-lg mt-stack-md text-center">
+<h1 class="font-display-lg-mobile text-display-lg-mobile md:font-display-lg md:text-display-lg text-brand-black mb-unit">Preparedness Guidelines</h1>
+<p class="font-body-lg text-body-lg text-outline">Your Trusted Eye on the Horizon. Stay ready before, during, and after a disaster.</p>
+</section>
+<!-- Phase Tabs -->
+<section class="mb-stack-lg">
+<div class="flex rounded-lg overflow-hidden border border-outline-variant bg-surface-container-low mb-stack-md p-1 gap-1">
+<button class="flex-1 py-2 font-label-caps text-label-caps bg-brand-green text-on-primary rounded-md transition-colors shadow-sm" id="tab-before" onclick="switchTab('before')">Before</button>
+<button class="flex-1 py-2 font-label-caps text-label-caps text-on-surface hover:bg-surface-variant rounded-md transition-colors" id="tab-during" onclick="switchTab('during')">During</button>
+<button class="flex-1 py-2 font-label-caps text-label-caps text-on-surface hover:bg-surface-variant rounded-md transition-colors" id="tab-after" onclick="switchTab('after')">After</button>
+</div>
+<!-- Tab Content: Before -->
+<div class="tab-content active space-y-stack-md" id="content-before">
+<div class="bg-surface rounded-xl border border-outline-variant p-stack-md border-l-4 border-l-brand-yellow shadow-sm">
+<h3 class="font-headline-sm text-headline-sm text-brand-black mb-2 flex items-center gap-2">
+<span class="material-symbols-outlined text-brand-yellow" data-icon="home_work">home_work</span>
+                        Secure Your Home
+                    </h3>
+<p class="text-on-surface-variant mb-4">Trim trees, clear gutters, and secure loose items outside. Install storm shutters or have plywood ready to cover windows.</p>
+</div>
+<div class="bg-surface rounded-xl border border-outline-variant p-stack-md border-l-4 border-l-brand-green shadow-sm">
+<h3 class="font-headline-sm text-headline-sm text-brand-black mb-2 flex items-center gap-2">
+<span class="material-symbols-outlined text-brand-green" data-icon="family_restroom">family_restroom</span>
+                        Family Communication Plan
+                    </h3>
+<p class="text-on-surface-variant">Designate an out-of-parish contact and establish a meeting place in case family members are separated.</p>
+</div>
+</div>
+<!-- Tab Content: During -->
+<div class="tab-content space-y-stack-md" id="content-during">
+<div class="bg-surface rounded-xl border border-outline-variant p-stack-md border-l-4 border-l-error shadow-sm">
+<h3 class="font-headline-sm text-headline-sm text-brand-black mb-2 flex items-center gap-2">
+<span class="material-symbols-outlined text-error" data-icon="warning">warning</span>
+                        Stay Inside
+                    </h3>
+<p class="text-on-surface-variant">Keep away from windows and glass doors. Close all interior doors and secure and brace external doors.</p>
+</div>
+</div>
+<!-- Tab Content: After -->
+<div class="tab-content space-y-stack-md" id="content-after">
+<div class="bg-surface rounded-xl border border-outline-variant p-stack-md border-l-4 border-l-brand-green shadow-sm">
+<h3 class="font-headline-sm text-headline-sm text-brand-black mb-2 flex items-center gap-2">
+<span class="material-symbols-outlined text-brand-green" data-icon="health_and_safety">health_and_safety</span>
+                        Assess Safely
+                    </h3>
+<p class="text-on-surface-variant">Wait until authorities declare it is safe to go outside. Watch for downed power lines and structural damage.</p>
+</div>
+</div>
+</section>
+<!-- 72-Hour Kit Checklist -->
+<section class="mb-stack-lg bg-surface-container-low rounded-xl p-stack-md border border-outline-variant">
+<div class="flex justify-between items-center mb-stack-md">
+<h2 class="font-headline-md text-headline-md text-brand-black">72-Hour Emergency Kit</h2>
+<button class="text-brand-green hover:text-primary-fixed-dim flex items-center gap-1 font-label-caps text-label-caps transition-colors">
+<span class="material-symbols-outlined" data-icon="download">download</span>
+<span class="hidden sm:inline">PDF</span>
+</button>
+</div>
+<div class="space-y-3" id="checklist">
+<!-- Checklist items via JS for interaction -->
+</div>
+</section>
+</main>
+<!-- BottomNavBar from JSON -->
+<nav class="bg-surface dark:bg-surface-dim border-t border-outline-variant dark:border-outline fixed bottom-0 w-full z-50 flex justify-around items-center px-2 py-3 md:hidden flat no shadows rounded-t-xl">
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-container-high p-2 rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="map">map</span>
+<span class="font-label-caps text-label-caps text-[10px]">Map</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-container-high p-2 rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="warning">warning</span>
+<span class="font-label-caps text-label-caps text-[10px]">Alerts</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-full px-4 py-1 hover:bg-surface-container-high transition-transform scale-90" href="#">
+<span class="material-symbols-outlined mb-1 text-brand-yellow" data-icon="menu_book">menu_book</span>
+<span class="font-label-caps text-label-caps text-[10px] text-brand-yellow">Prepare</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-container-high p-2 rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="call">call</span>
+<span class="font-label-caps text-label-caps text-[10px]">Contacts</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-container-high p-2 rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="history">history</span>
+<span class="font-label-caps text-label-caps text-[10px]">Stories</span>
+</a>
+</nav>
+<script>
+        // Tab Switching Logic
+        function switchTab(phase) {
+            // Reset buttons
+            document.querySelectorAll('[id^="tab-"]').forEach(btn => {
+                btn.className = 'flex-1 py-2 font-label-caps text-label-caps text-on-surface hover:bg-surface-variant rounded-md transition-colors';
+            });
+            // Reset content
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+
+            // Set active button
+            const activeBtn = document.getElementById(`tab-${phase}`);
+            activeBtn.className = 'flex-1 py-2 font-label-caps text-label-caps bg-brand-green text-on-primary rounded-md transition-colors shadow-sm';
+            
+            // Set active content
+            document.getElementById(`content-${phase}`).classList.add('active');
+        }
+
+        // Checklist Logic
+        const kitItems = [
+            "Water (1 gallon per person per day)",
+            "Non-perishable food (3-day supply)",
+            "Battery-powered or hand-crank radio",
+            "Flashlight and extra batteries",
+            "First aid kit",
+            "Important family documents (in waterproof container)",
+            "Cash (in small denominations)"
+        ];
+
+        const checklistContainer = document.getElementById('checklist');
+        
+        kitItems.forEach((item, index) => {
+            const label = document.createElement('label');
+            label.className = 'flex items-center gap-3 p-3 bg-surface border border-outline-variant rounded-lg cursor-pointer hover:bg-surface-variant transition-colors';
+            
+            const checkbox = document.createElement('input');
+            checkbox.type = 'checkbox';
+            checkbox.className = 'w-5 h-5 text-brand-green rounded border-outline focus:ring-brand-green';
+            
+            const text = document.createElement('span');
+            text.className = 'text-on-surface';
+            text.textContent = item;
+
+            checkbox.addEventListener('change', (e) => {
+                if(e.target.checked) {
+                    text.classList.add('line-through', 'text-outline');
+                    label.classList.add('opacity-75');
+                } else {
+                    text.classList.remove('line-through', 'text-outline');
+                    label.classList.remove('opacity-75');
+                }
+            });
+
+            label.appendChild(checkbox);
+            label.appendChild(text);
+            checklistContainer.appendChild(label);
+        });
+    </script>
+</body></html>

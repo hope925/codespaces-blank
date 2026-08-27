@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Shelter &amp; Safe Zone Map - Watch Out JA</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-tint": "#3f5f92",
+                        "tertiary-fixed": "#ffdbcc",
+                        "error-container": "#ffdad6",
+                        "surface-bright": "#f9f9fc",
+                        "inverse-primary": "#aac7ff",
+                        "surface-dim": "#dadadc",
+                        "primary-fixed-dim": "#aac7ff",
+                        "surface-container-lowest": "#ffffff",
+                        "primary": "#001736",
+                        "surface": "#f9f9fc",
+                        "on-primary-fixed": "#001b3e",
+                        "tertiary-container": "#4f1c01",
+                        "surface-container-high": "#e8e8ea",
+                        "outline": "#747780",
+                        "on-error-container": "#93000a",
+                        "tertiary": "#2e0d00",
+                        "on-tertiary-container": "#ce805b",
+                        "on-secondary-fixed-variant": "#454749",
+                        "surface-container-highest": "#e2e2e5",
+                        "on-tertiary-fixed-variant": "#713617",
+                        "primary-container": "#002b5c",
+                        "on-primary-fixed-variant": "#264779",
+                        "surface-variant": "#e2e2e5",
+                        "on-tertiary": "#ffffff",
+                        "secondary-fixed": "#e2e2e4",
+                        "on-primary": "#ffffff",
+                        "primary-fixed": "#d6e3ff",
+                        "on-error": "#ffffff",
+                        "on-tertiary-fixed": "#351000",
+                        "on-surface-variant": "#43474f",
+                        "on-secondary": "#ffffff",
+                        "surface-container": "#eeeef0",
+                        "tertiary-fixed-dim": "#ffb695",
+                        "on-secondary-container": "#616365",
+                        "inverse-on-surface": "#f0f0f3",
+                        "on-background": "#1a1c1e",
+                        "on-primary-container": "#7594cb",
+                        "secondary-container": "#dfdfe1",
+                        "background": "#f9f9fc",
+                        "surface-container-low": "#f3f3f6",
+                        "secondary": "#5d5e60",
+                        "on-surface": "#1a1c1e",
+                        "outline-variant": "#c4c6d0",
+                        "secondary-fixed-dim": "#c6c6c8",
+                        "on-secondary-fixed": "#1a1c1d",
+                        "inverse-surface": "#2f3133",
+                        "error": "#ba1a1a"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "gutter": "16px",
+                        "unit": "4px",
+                        "stack-lg": "32px",
+                        "margin-desktop": "48px",
+                        "margin-mobile": "16px",
+                        "stack-md": "16px",
+                        "stack-sm": "8px"
+                    },
+                    "fontFamily": {
+                        "display-lg-mobile": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "headline-sm-mobile": ["Inter"],
+                        "headline-sm": ["Inter"],
+                        "label-caps": ["Inter"],
+                        "body-md": ["Inter"],
+                        "display-lg": ["Inter"],
+                        "status-lg": ["Inter"],
+                        "headline-md": ["Inter"]
+                    },
+                    "fontSize": {
+                        "display-lg-mobile": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+                        "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }],
+                        "headline-sm-mobile": ["18px", { "lineHeight": "26px", "fontWeight": "600" }],
+                        "headline-sm": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+                        "label-caps": ["14px", { "lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "700" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "display-lg": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "status-lg": ["22px", { "lineHeight": "28px", "fontWeight": "800" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "600" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+</head>
+<body class="bg-surface-container-lowest text-on-surface font-body-md antialiased selection:bg-primary-fixed selection:text-on-primary-fixed">
+<!-- TopAppBar -->
+<header class="flex justify-between items-center w-full px-margin-mobile md:px-margin-desktop h-16 fixed top-0 z-50 bg-primary dark:bg-primary">
+<div class="flex items-center gap-2">
+<span class="font-status-lg text-status-lg text-on-primary tracking-tight">Watch Out JA</span>
+</div>
+<div class="flex gap-stack-md">
+<button aria-label="Notifications" class="flex items-center justify-center w-8 h-8 rounded-full hover:bg-primary-container transition-colors">
+<span class="material-symbols-outlined text-on-primary" style="font-variation-settings: 'FILL' 1;">notifications</span>
+</button>
+<button aria-label="Search" class="flex items-center justify-center w-8 h-8 rounded-full hover:bg-primary-container transition-colors">
+<span class="material-symbols-outlined text-on-primary" style="font-variation-settings: 'FILL' 1;">search</span>
+</button>
+</div>
+</header>
+<!-- Main Content Area -->
+<main class="pt-16 pb-24 min-h-[100dvh] flex flex-col w-full max-w-md mx-auto relative shadow-2xl shadow-primary/5">
+<!-- Slogan Banner -->
+<div class="w-full bg-surface-container py-unit text-center border-b border-outline-variant/30">
+<p class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-widest text-[10px]">Your Trusted Eye on the Horizon</p>
+</div>
+<!-- Map Section -->
+<div class="relative w-full h-[40vh] bg-surface-container border-b border-outline-variant overflow-hidden">
+<div class="absolute inset-0 bg-cover bg-center" data-alt="A highly detailed top-down digital map view of Jamaica, specifically focusing on terrain and major road networks. The style is modern, clean, and utilitarian, utilizing a high-contrast palette of deep navy blue for water bodies, crisp white landmasses, and subtle light gray contour lines. Several vibrant, glowing pin markers indicating safe zones are scattered across the topology. The overall mood is authoritative and reliable, fitting a corporate modern emergency response application." data-location="Jamaica" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBeFIWgxgnfu8WfgylffqAya1nidWxrYs4Tc8oBds5KI8JVCU3ajLjo7uyIZKlfQNFJz192R6HKkaxCF6UNpZb4fVfClACwq-_gQuW4h76HqrwyDqLa0s0NGP4rhGnpDa0ls5Fj-Dz7Ltr_mKDeY9pPv0nRSwv-qZl7dKbcBB-xZqgvHxM-eWr7a64ocXlfW7wOEmMwQKraZwSpuvjw8zgw1MamucuVCpF18PkcdbA6U-3OBnte3uQ')"></div>
+<!-- Map Controls -->
+<div class="absolute bottom-stack-md right-margin-mobile flex flex-col gap-unit">
+<button aria-label="Zoom In" class="bg-surface-container-lowest text-on-surface p-2 rounded-full border border-outline-variant shadow-sm flex items-center justify-center">
+<span class="material-symbols-outlined">add</span>
+</button>
+<button aria-label="Zoom Out" class="bg-surface-container-lowest text-on-surface p-2 rounded-full border border-outline-variant shadow-sm flex items-center justify-center">
+<span class="material-symbols-outlined">remove</span>
+</button>
+<button aria-label="My Location" class="bg-primary text-on-primary p-2 rounded-full shadow-sm mt-2 flex items-center justify-center">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">my_location</span>
+</button>
+</div>
+</div>
+<!-- Filter Bar -->
+<div class="w-full px-margin-mobile py-stack-sm bg-surface-container-lowest border-b border-outline-variant flex items-center gap-stack-sm overflow-x-auto hide-scrollbar shrink-0">
+<span class="flex items-center text-on-surface-variant mr-1">
+<span class="material-symbols-outlined text-[18px]">filter_list</span>
+</span>
+<button class="px-4 py-1.5 rounded-full border border-primary text-on-primary-fixed bg-primary-fixed font-label-caps text-label-caps whitespace-nowrap">All Parishes</button>
+<button class="px-4 py-1.5 rounded-full border border-outline-variant text-on-surface-variant bg-surface-container-lowest font-label-caps text-label-caps whitespace-nowrap">Kingston</button>
+<button class="px-4 py-1.5 rounded-full border border-outline-variant text-on-surface-variant bg-surface-container-lowest font-label-caps text-label-caps whitespace-nowrap">St. Andrew</button>
+<button class="px-4 py-1.5 rounded-full border border-outline-variant text-on-surface-variant bg-surface-container-lowest font-label-caps text-label-caps whitespace-nowrap">St. Catherine</button>
+</div>
+<!-- Shelter List -->
+<div class="flex-1 px-margin-mobile py-stack-md flex flex-col gap-stack-md bg-surface overflow-y-auto">
+<!-- Shelter Card: Open -->
+<article class="w-full border border-outline-variant rounded-lg p-stack-md bg-surface-container-lowest relative overflow-hidden flex flex-col gap-stack-sm transition-transform active:scale-[0.98]">
+<!-- Status Accent Line -->
+<div class="absolute left-0 top-0 bottom-0 w-1 bg-primary"></div>
+<div class="flex justify-between items-start">
+<div class="flex flex-col pr-2">
+<h3 class="font-headline-sm-mobile text-headline-sm-mobile text-on-surface">National Arena</h3>
+<p class="font-body-md text-body-md text-on-surface-variant flex items-center gap-1 mt-0.5 text-sm">
+<span class="material-symbols-outlined text-[16px]">location_on</span> Kingston
+                        </p>
+</div>
+<span class="bg-primary-fixed text-on-primary-fixed font-label-caps text-label-caps px-2 py-1 rounded-sm shrink-0 flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-primary animate-pulse"></span> OPEN
+                    </span>
+</div>
+<hr class="border-outline-variant/30 my-1"/>
+<div class="flex justify-between items-center">
+<div class="flex gap-3 text-on-surface-variant">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;" title="Accessible Facility">accessible</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;" title="Medical Support Available">local_hospital</span>
+</div>
+<button class="font-label-caps text-label-caps text-primary flex items-center gap-1 bg-primary-fixed/20 px-3 py-1.5 rounded-full hover:bg-primary-fixed/50 transition-colors">
+                        DIRECTIONS <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+</button>
+</div>
+</article>
+<!-- Shelter Card: Full -->
+<article class="w-full border border-outline-variant rounded-lg p-stack-md bg-surface-container-lowest relative overflow-hidden flex flex-col gap-stack-sm opacity-80">
+<!-- Status Accent Line -->
+<div class="absolute left-0 top-0 bottom-0 w-1 bg-error"></div>
+<div class="flex justify-between items-start">
+<div class="flex flex-col pr-2">
+<h3 class="font-headline-sm-mobile text-headline-sm-mobile text-on-surface">St. Jago High School</h3>
+<p class="font-body-md text-body-md text-on-surface-variant flex items-center gap-1 mt-0.5 text-sm">
+<span class="material-symbols-outlined text-[16px]">location_on</span> St. Catherine
+                        </p>
+</div>
+<span class="bg-error-container text-on-error-container font-label-caps text-label-caps px-2 py-1 rounded-sm shrink-0">
+                        FULL
+                    </span>
+</div>
+<hr class="border-outline-variant/30 my-1"/>
+<div class="flex justify-between items-center">
+<div class="flex gap-3 text-on-surface-variant">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;" title="Accessible Facility">accessible</span>
+</div>
+<button class="font-label-caps text-label-caps text-outline flex items-center gap-1 px-3 py-1.5 cursor-not-allowed">
+                        DIRECTIONS
+                    </button>
+</div>
+</article>
+<!-- Shelter Card: Open -->
+<article class="w-full border border-outline-variant rounded-lg p-stack-md bg-surface-container-lowest relative overflow-hidden flex flex-col gap-stack-sm transition-transform active:scale-[0.98]">
+<!-- Status Accent Line -->
+<div class="absolute left-0 top-0 bottom-0 w-1 bg-primary"></div>
+<div class="flex justify-between items-start">
+<div class="flex flex-col pr-2">
+<h3 class="font-headline-sm-mobile text-headline-sm-mobile text-on-surface">Mona High School</h3>
+<p class="font-body-md text-body-md text-on-surface-variant flex items-center gap-1 mt-0.5 text-sm">
+<span class="material-symbols-outlined text-[16px]">location_on</span> St. Andrew
+                        </p>
+</div>
+<span class="bg-primary-fixed text-on-primary-fixed font-label-caps text-label-caps px-2 py-1 rounded-sm shrink-0 flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-primary animate-pulse"></span> OPEN
+                    </span>
+</div>
+<hr class="border-outline-variant/30 my-1"/>
+<div class="flex justify-between items-center">
+<div class="flex gap-3 text-on-surface-variant">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;" title="Medical Support Available">local_hospital</span>
+</div>
+<button class="font-label-caps text-label-caps text-primary flex items-center gap-1 bg-primary-fixed/20 px-3 py-1.5 rounded-full hover:bg-primary-fixed/50 transition-colors">
+                        DIRECTIONS <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+</button>
+</div>
+</article>
+</div>
+</main>
+<!-- BottomNavBar (Mobile Only) -->
+<nav class="fixed bottom-0 w-full max-w-md left-1/2 -translate-x-1/2 z-50 flex justify-around items-center px-2 py-3 md:hidden bg-surface border-t border-outline-variant rounded-t-xl">
+<!-- Active: Map -->
+<a class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-full px-4 py-1.5 transition-transform scale-90" href="#">
+<span class="material-symbols-outlined text-[24px]" style="font-variation-settings: 'FILL' 1;">map</span>
+<span class="font-label-caps text-label-caps mt-1 text-[10px]">Map</span>
+</a>
+<!-- Inactive: Alerts -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-container-high transition-colors px-2 py-1 rounded-lg" href="#">
+<span class="material-symbols-outlined text-[24px]">warning</span>
+<span class="font-label-caps text-label-caps mt-1 text-[10px]">Alerts</span>
+</a>
+<!-- Inactive: Prepare -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-container-high transition-colors px-2 py-1 rounded-lg" href="#">
+<span class="material-symbols-outlined text-[24px]">menu_book</span>
+<span class="font-label-caps text-label-caps mt-1 text-[10px]">Prepare</span>
+</a>
+<!-- Inactive: Contacts -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-container-high transition-colors px-2 py-1 rounded-lg" href="#">
+<span class="material-symbols-outlined text-[24px]">call</span>
+<span class="font-label-caps text-label-caps mt-1 text-[10px]">Contacts</span>
+</a>
+<!-- Inactive: Stories -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-container-high transition-colors px-2 py-1 rounded-lg" href="#">
+<span class="material-symbols-outlined text-[24px]">history</span>
+<span class="font-label-caps text-label-caps mt-1 text-[10px]">Stories</span>
+</a>
+</nav>
+</body></html>

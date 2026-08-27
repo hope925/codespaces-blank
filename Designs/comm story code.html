@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Watch Out JA - Community Stories</title>
+<!-- Tailwind CSS & Plugins -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Inter Font (from Design System) -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind Config -->
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-tint": "#3f5f92",
+                        "tertiary-fixed": "#ffdbcc",
+                        "error-container": "#ffdad6",
+                        "surface-bright": "#f9f9fc",
+                        "inverse-primary": "#aac7ff",
+                        "surface-dim": "#dadadc",
+                        "primary-fixed-dim": "#aac7ff",
+                        "surface-container-lowest": "#ffffff",
+                        "primary": "#001736",
+                        "surface": "#f9f9fc",
+                        "on-primary-fixed": "#001b3e",
+                        "tertiary-container": "#4f1c01",
+                        "surface-container-high": "#e8e8ea",
+                        "outline": "#747780",
+                        "on-error-container": "#93000a",
+                        "tertiary": "#2e0d00",
+                        "on-tertiary-container": "#ce805b",
+                        "on-secondary-fixed-variant": "#454749",
+                        "surface-container-highest": "#e2e2e5",
+                        "on-tertiary-fixed-variant": "#713617",
+                        "primary-container": "#002b5c",
+                        "on-primary-fixed-variant": "#264779",
+                        "surface-variant": "#e2e2e5",
+                        "on-tertiary": "#ffffff",
+                        "secondary-fixed": "#e2e2e4",
+                        "on-primary": "#ffffff",
+                        "primary-fixed": "#d6e3ff",
+                        "on-error": "#ffffff",
+                        "on-tertiary-fixed": "#351000",
+                        "on-surface-variant": "#43474f",
+                        "on-secondary": "#ffffff",
+                        "surface-container": "#eeeef0",
+                        "tertiary-fixed-dim": "#ffb695",
+                        "on-secondary-container": "#616365",
+                        "inverse-on-surface": "#f0f0f3",
+                        "on-background": "#1a1c1e",
+                        "on-primary-container": "#7594cb",
+                        "secondary-container": "#dfdfe1",
+                        "background": "#f9f9fc",
+                        "surface-container-low": "#f3f3f6",
+                        "secondary": "#5d5e60",
+                        "on-surface": "#1a1c1e",
+                        "outline-variant": "#c4c6d0",
+                        "secondary-fixed-dim": "#c6c6c8",
+                        "on-secondary-fixed": "#1a1c1d",
+                        "inverse-surface": "#2f3133",
+                        "error": "#ba1a1a"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "gutter": "16px",
+                        "unit": "4px",
+                        "stack-lg": "32px",
+                        "margin-desktop": "48px",
+                        "margin-mobile": "16px",
+                        "stack-md": "16px",
+                        "stack-sm": "8px"
+                    },
+                    "fontFamily": {
+                        "display-lg-mobile": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "headline-sm": ["Inter"],
+                        "label-caps": ["Inter"],
+                        "body-md": ["Inter"],
+                        "display-lg": ["Inter"],
+                        "status-lg": ["Inter"],
+                        "headline-md": ["Inter"]
+                    },
+                    "fontSize": {
+                        "display-lg-mobile": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+                        "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }],
+                        "headline-sm": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+                        "label-caps": ["14px", { "lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "700" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "display-lg": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "status-lg": ["22px", { "lineHeight": "28px", "fontWeight": "800" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "600" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+    </style>
+</head>
+<body class="bg-surface-container-lowest text-on-surface antialiased pb-24 pt-16">
+<!-- TopAppBar -->
+<header class="flex justify-between items-center w-full px-margin-mobile md:px-margin-desktop h-16 fixed top-0 z-50 bg-primary dark:bg-primary flat no shadows">
+<div class="flex items-center gap-2">
+<span class="font-status-lg text-status-lg text-on-primary dark:text-on-primary tracking-tight">Watch Out JA</span>
+</div>
+<!-- Desktop Nav (Hidden on Mobile) -->
+<nav class="hidden md:flex gap-6 items-center">
+<a class="font-headline-sm text-headline-sm-mobile md:text-headline-sm text-on-primary-container dark:text-primary-fixed opacity-80 hover:opacity-100 hover:bg-primary-container transition-colors px-2 py-1 rounded" href="#">Map</a>
+<a class="font-headline-sm text-headline-sm-mobile md:text-headline-sm text-on-primary-container dark:text-primary-fixed opacity-80 hover:opacity-100 hover:bg-primary-container transition-colors px-2 py-1 rounded" href="#">Alerts</a>
+<a class="font-headline-sm text-headline-sm-mobile md:text-headline-sm text-on-primary-container dark:text-primary-fixed opacity-80 hover:opacity-100 hover:bg-primary-container transition-colors px-2 py-1 rounded" href="#">Preparedness</a>
+<a class="font-headline-sm text-headline-sm-mobile md:text-headline-sm text-on-primary-container dark:text-primary-fixed opacity-80 hover:opacity-100 hover:bg-primary-container transition-colors px-2 py-1 rounded" href="#">Contacts</a>
+<a class="font-headline-sm text-headline-sm-mobile md:text-headline-sm text-on-primary border-b-2 border-on-primary pb-1 hover:opacity-100 hover:bg-primary-container transition-colors px-2 py-1 rounded" href="#">Stories</a>
+</nav>
+<div class="flex items-center gap-4">
+<button aria-label="notifications" class="text-on-primary dark:text-on-primary hover:opacity-100 hover:bg-primary-container transition-colors rounded-full p-1">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">notifications</span>
+</button>
+<button aria-label="search" class="text-on-primary dark:text-on-primary hover:opacity-100 hover:bg-primary-container transition-colors rounded-full p-1">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">search</span>
+</button>
+</div>
+</header>
+<!-- Main Content -->
+<main class="px-margin-mobile flex flex-col gap-stack-lg mt-stack-md">
+<!-- Hero Section -->
+<section class="flex flex-col gap-stack-sm">
+<h1 class="font-display-lg-mobile text-display-lg-mobile text-primary tracking-tight">Your Trusted Eye on the Horizon</h1>
+<p class="font-body-md text-body-md text-on-surface-variant">Real accounts of resilience and survival from across the parishes.</p>
+</section>
+<!-- Filters -->
+<section class="flex gap-3 overflow-x-auto no-scrollbar pb-2">
+<button class="whitespace-nowrap px-4 py-2 rounded-full bg-primary text-on-primary font-label-caps text-label-caps">All Stories</button>
+<button class="whitespace-nowrap px-4 py-2 rounded-full bg-surface border border-outline-variant text-on-surface font-label-caps text-label-caps hover:bg-surface-variant transition-colors">Hurricane</button>
+<button class="whitespace-nowrap px-4 py-2 rounded-full bg-surface border border-outline-variant text-on-surface font-label-caps text-label-caps hover:bg-surface-variant transition-colors">Earthquake</button>
+<button class="whitespace-nowrap px-4 py-2 rounded-full bg-surface border border-outline-variant text-on-surface font-label-caps text-label-caps hover:bg-surface-variant transition-colors">Flood</button>
+<button class="whitespace-nowrap px-4 py-2 rounded-full bg-surface border border-outline-variant text-on-surface font-label-caps text-label-caps hover:bg-surface-variant transition-colors flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]">filter_list</span> More Filters
+            </button>
+</section>
+<!-- Feed -->
+<section class="flex flex-col gap-stack-md">
+<!-- Story Card 1 -->
+<article class="bg-surface rounded-xl border border-outline-variant overflow-hidden flex flex-col">
+<div class="h-48 w-full relative">
+<img class="w-full h-full object-cover" data-alt="A compelling, documentary-style photograph showing the immediate aftermath of a severe hurricane in a lush tropical setting. The scene features uprooted trees and a partially damaged roof of a small coastal house, illuminated by dramatic, breaking sunlight through heavy storm clouds. The color palette emphasizes deep greens, earthy browns, and the stark contrast of bright white light piercing the gloom, conveying both devastation and emerging hope. The mood is resilient and raw, fitting a high-trust emergency communication platform." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDBcU8OpoiTHlC1_wR7l--mnf3HoQyoExy9Q2onv9OveLT8MWPNO3znGze4kAGLe7pFgoX9LT-99RYaCHBosLfoFdtjTk_HzZGuH7fvHIeFwDf5yPKdfqPjNombFFxj7MUtvj_xlsSUqNYkKDOU-zWz5GeSwsG_H5P4-6o8tpOV4wqrBkbWIiQ7IbbfbPg4uEjbOJo6eQwoeQEwwaw_UOKCuayCB9jY7x38uWMV-d-5yvh9jh53KaE"/>
+<div class="absolute top-3 left-3 bg-surface-container-lowest text-primary font-label-caps text-label-caps px-2 py-1 rounded-sm flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">cyclone</span> Hurricane
+                    </div>
+</div>
+<div class="p-stack-md flex flex-col gap-stack-sm">
+<div class="flex justify-between items-center font-label-caps text-label-caps text-on-surface-variant">
+<span>St. Thomas</span>
+<span>Sept 12, 1988</span>
+</div>
+<h2 class="font-headline-sm text-headline-sm-mobile text-primary">Rebuilding After Gilbert</h2>
+<p class="font-body-md text-body-md text-on-surface line-clamp-3">"We lost the roof within the first few hours, but the community came together faster than the winds died down. Sharing supplies and shelter was how we survived the hardest week of our lives."</p>
+<a class="text-primary font-label-caps text-label-caps mt-2 flex items-center gap-1 hover:underline" href="#">Read Full Story <span class="material-symbols-outlined text-[16px]">arrow_forward</span></a>
+</div>
+</article>
+<!-- Story Card 2 -->
+<article class="bg-surface rounded-xl border border-outline-variant overflow-hidden flex flex-col">
+<div class="h-48 w-full relative">
+<img class="w-full h-full object-cover" data-alt="A high-quality, emotionally resonant image of a flooded residential street in a tropical town during dusk. The water reflects the warm, muted tones of streetlights and emergency vehicle flares. In the foreground, a small, sturdy wooden boat is moored near a partially submerged porch. The overall aesthetic relies on deep blues, stark whites, and vivid warning-light oranges, emphasizing clarity and official emergency documentation. The atmosphere is tense but orderly." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBsc5gCk6bYtHboKS4fO_DHite-xB2PQK0vqcSv2r-enbWxaV0JRncCaqSI1GoBDe7Es65jU1kutIOBDO5ByF_-_SPyAlTzKwWTblhu7zfUUuE1N6T-0w4czEsR1yIvZIw3dQTlmaVTqtGZlxMOHVYM0D7HsMY_Jr40qapMMnqOm3N-z1oXAXjHqQGgNPwVwgtW5Sik2XTVfmYNEZLyAa5hkrkLcVHq77PJAU3M4CMmhdTyXH9qgeg"/>
+<div class="absolute top-3 left-3 bg-surface-container-lowest text-primary font-label-caps text-label-caps px-2 py-1 rounded-sm flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">water_damage</span> Flood
+                    </div>
+</div>
+<div class="p-stack-md flex flex-col gap-stack-sm">
+<div class="flex justify-between items-center font-label-caps text-label-caps text-on-surface-variant">
+<span>Portland</span>
+<span>Nov 05, 2021</span>
+</div>
+<h2 class="font-headline-sm text-headline-sm-mobile text-primary">High Waters, Higher Spirits</h2>
+<p class="font-body-md text-body-md text-on-surface line-clamp-3">"The river breached its banks just before midnight. Thanks to the early warning alerts, we moved the elders to higher ground. We lost property, but we kept what mattered most."</p>
+<a class="text-primary font-label-caps text-label-caps mt-2 flex items-center gap-1 hover:underline" href="#">Read Full Story <span class="material-symbols-outlined text-[16px]">arrow_forward</span></a>
+</div>
+</article>
+</section>
+</main>
+<!-- Floating Action Button -->
+<button class="fixed bottom-24 right-4 bg-primary text-on-primary rounded-xl px-4 py-3 flex items-center gap-2 shadow-[0_4px_12px_rgba(0,0,0,0.1)] hover:bg-primary-container transition-colors z-40">
+<span class="material-symbols-outlined">edit_square</span>
+<span class="font-label-caps text-label-caps">Share Story</span>
+</button>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 w-full z-50 flex justify-around items-center px-2 py-3 md:hidden bg-surface dark:bg-surface-dim docked full-width bottom-0 rounded-t-xl border-t border-outline-variant dark:border-outline flat no shadows">
+<!-- Tab 1 -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-container-high p-2 rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">map</span>
+<span class="font-label-caps text-[10px] mt-1">Map</span>
+</a>
+<!-- Tab 2 -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-container-high p-2 rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">warning</span>
+<span class="font-label-caps text-[10px] mt-1">Alerts</span>
+</a>
+<!-- Tab 3 -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-container-high p-2 rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">menu_book</span>
+<span class="font-label-caps text-[10px] mt-1">Prepare</span>
+</a>
+<!-- Tab 4 -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-container-high p-2 rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">call</span>
+<span class="font-label-caps text-[10px] mt-1">Contacts</span>
+</a>
+<!-- Tab 5 (Active) -->
+<a class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-full px-4 py-1 hover:bg-surface-container-high transition-transform scale-90" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">history</span>
+<span class="font-label-caps text-[10px] mt-1">Stories</span>
+</a>
+</nav>
+</body></html>

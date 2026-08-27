@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Live Hazard Map - Watch Out JA</title>
+<!-- Fonts & Icons -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;family=Sora:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Design System Configuration -->
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "surface-tint": "#3f5f92",
+                      "tertiary-fixed": "#ffdbcc",
+                      "error-container": "#ffdad6",
+                      "surface-bright": "#f9f9fc",
+                      "inverse-primary": "#aac7ff",
+                      "surface-dim": "#dadadc",
+                      "primary-fixed-dim": "#aac7ff",
+                      "surface-container-lowest": "#ffffff",
+                      "primary": "#001736",
+                      "surface": "#f9f9fc",
+                      "on-primary-fixed": "#001b3e",
+                      "tertiary-container": "#4f1c01",
+                      "surface-container-high": "#e8e8ea",
+                      "outline": "#747780",
+                      "on-error-container": "#93000a",
+                      "tertiary": "#2e0d00",
+                      "on-tertiary-container": "#ce805b",
+                      "on-secondary-fixed-variant": "#454749",
+                      "surface-container-highest": "#e2e2e5",
+                      "on-tertiary-fixed-variant": "#713617",
+                      "primary-container": "#002b5c",
+                      "on-primary-fixed-variant": "#264779",
+                      "surface-variant": "#e2e2e5",
+                      "on-tertiary": "#ffffff",
+                      "secondary-fixed": "#e2e2e4",
+                      "on-primary": "#ffffff",
+                      "primary-fixed": "#d6e3ff",
+                      "on-error": "#ffffff",
+                      "on-tertiary-fixed": "#351000",
+                      "on-surface-variant": "#43474f",
+                      "on-secondary": "#ffffff",
+                      "surface-container": "#eeeef0",
+                      "tertiary-fixed-dim": "#ffb695",
+                      "on-secondary-container": "#616365",
+                      "inverse-on-surface": "#f0f0f3",
+                      "on-background": "#1a1c1e",
+                      "on-primary-container": "#7594cb",
+                      "secondary-container": "#dfdfe1",
+                      "background": "#f9f9fc",
+                      "surface-container-low": "#f3f3f6",
+                      "secondary": "#5d5e60",
+                      "on-surface": "#1a1c1e",
+                      "outline-variant": "#c4c6d0",
+                      "secondary-fixed-dim": "#c6c6c8",
+                      "on-secondary-fixed": "#1a1c1d",
+                      "inverse-surface": "#2f3133",
+                      "error": "#ba1a1a"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.125rem",
+                      "lg": "0.25rem",
+                      "xl": "0.5rem",
+                      "full": "0.75rem"
+              },
+              "spacing": {
+                      "gutter": "16px",
+                      "unit": "4px",
+                      "stack-lg": "32px",
+                      "margin-desktop": "48px",
+                      "margin-mobile": "16px",
+                      "stack-md": "16px",
+                      "stack-sm": "8px"
+              },
+              "fontFamily": {
+                      "display-lg-mobile": ["Inter"],
+                      "body-lg": ["Inter"],
+                      "headline-sm": ["Inter"],
+                      "label-caps": ["Inter"],
+                      "body-md": ["Inter"],
+                      "display-lg": ["Inter"],
+                      "status-lg": ["Inter"],
+                      "headline-md": ["Inter"]
+              },
+              "fontSize": {
+                      "display-lg-mobile": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                      "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                      "headline-sm": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                      "label-caps": ["14px", {"lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "700"}],
+                      "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                      "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                      "status-lg": ["22px", {"lineHeight": "28px", "fontWeight": "800"}],
+                      "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}]
+              }
+            }
+          }
+        }
+    </script>
+<style>
+        /* Fallback to ensure Material Symbols render correctly */
+        .material-symbols-outlined {
+          font-family: 'Material Symbols Outlined';
+          font-weight: normal;
+          font-style: normal;
+          font-size: 24px;
+          line-height: 1;
+          letter-spacing: normal;
+          text-transform: none;
+          display: inline-block;
+          white-space: nowrap;
+          word-wrap: normal;
+          direction: ltr;
+          -webkit-font-feature-settings: 'liga';
+          -webkit-font-smoothing: antialiased;
+        }
+    </style>
+</head>
+<body class="bg-surface-container-lowest text-on-surface antialiased min-h-screen flex flex-col font-[Inter] selection:bg-primary-container selection:text-on-primary-container">
+<!-- TopAppBar -->
+<header class="bg-primary dark:bg-primary flex justify-between items-center w-full px-margin-mobile md:px-margin-desktop h-16 fixed top-0 z-50">
+<div class="font-status-lg text-status-lg text-on-primary dark:text-on-primary tracking-tight">Watch Out JA</div>
+<div class="flex items-center gap-2">
+<button aria-label="Notifications" class="text-on-primary dark:text-on-primary p-2 hover:opacity-100 hover:bg-primary-container transition-colors rounded-full active:scale-95 duration-100 flex items-center justify-center">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button aria-label="Search" class="text-on-primary dark:text-on-primary p-2 hover:opacity-100 hover:bg-primary-container transition-colors rounded-full active:scale-95 duration-100 flex items-center justify-center">
+<span class="material-symbols-outlined">search</span>
+</button>
+</div>
+</header>
+<!-- Sticky Alert Banners -->
+<div class="fixed top-16 w-full z-40 flex flex-col">
+<div class="bg-error text-on-error w-full px-margin-mobile py-stack-sm flex items-start gap-3 shadow-sm border-b border-error-container">
+<span class="material-symbols-outlined mt-0.5" data-weight="fill" style="font-variation-settings: 'FILL' 1;">warning</span>
+<div class="flex flex-col">
+<span class="font-label-caps text-label-caps">FLASH FLOOD WARNING</span>
+<span class="font-body-md text-body-md opacity-90 text-sm">Active for St. Andrew &amp; Kingston. Move to higher ground immediately.</span>
+</div>
+</div>
+</div>
+<!-- Main Canvas -->
+<main class="flex-grow flex flex-col pt-[124px] pb-[80px] w-full max-w-7xl mx-auto">
+<!-- Interactive Map Hero Section -->
+<section class="relative w-full h-[45vh] min-h-[350px] bg-surface-variant shrink-0">
+<!-- Map Background Placeholder -->
+<div class="absolute inset-0 bg-cover bg-center" data-alt="A highly detailed, high-contrast digital topographical map of Jamaica, emphasizing clear terrain differences and coastal boundaries. The map is designed in a light-mode utilitarian aesthetic, utilizing pristine whites, subtle greys, and distinct accent colors to denote geographic features, optimized for an emergency management dashboard interface." data-location="Jamaica" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBeFIWgxgnfu8WfgylffqAya1nidWxrYs4Tc8oBds5KI8JVCU3ajLjo7uyIZKlfQNFJz192R6HKkaxCF6UNpZb4fVfClACwq-_gQuW4h76HqrwyDqLa0s0NGP4rhGnpDa0ls5Fj-Dz7Ltr_mKDeY9pPv0nRSwv-qZl7dKbcBB-xZqgvHxM-eWr7a64ocXlfW7wOEmMwQKraZwSpuvjw8zgw1MamucuVCpF18PkcdbA6U-3OBnte3uQ')"></div>
+<!-- Map Overlays / Hazards -->
+<div class="absolute inset-0 pointer-events-none">
+<!-- Example Hazard Zone 1 -->
+<div class="absolute top-[45%] left-[65%] flex flex-col items-center">
+<div class="relative flex items-center justify-center">
+<div class="w-16 h-16 bg-error/20 rounded-full absolute animate-ping"></div>
+<div class="w-10 h-10 bg-error/40 rounded-full absolute"></div>
+<div class="w-4 h-4 bg-error rounded-full relative z-10 border-2 border-surface-container-lowest"></div>
+</div>
+<span class="mt-1 font-label-caps text-[10px] bg-surface-container-lowest text-on-surface px-1.5 py-0.5 rounded shadow-sm">Flood Zone A</span>
+</div>
+<!-- Example Hazard Zone 2 -->
+<div class="absolute top-[30%] left-[40%] flex flex-col items-center">
+<div class="relative flex items-center justify-center">
+<div class="w-8 h-8 bg-tertiary-container/30 rounded-full absolute"></div>
+<div class="w-3 h-3 bg-tertiary-container rounded-full relative z-10 border-2 border-surface-container-lowest"></div>
+</div>
+</div>
+</div>
+<!-- Brand Slogan Overlay -->
+<div class="absolute bottom-4 left-4 right-4 bg-surface-container-lowest/95 backdrop-blur-md p-stack-md rounded-xl border border-outline-variant shadow-sm z-10">
+<h1 class="font-headline-sm text-headline-sm text-primary mb-1">Your Trusted Eye on the Horizon</h1>
+<p class="font-body-md text-body-md text-on-surface-variant">Live tracking of active hazards across Jamaica.</p>
+</div>
+<!-- Map Controls (Floating) -->
+<div class="absolute top-4 right-4 flex flex-col gap-2 z-10">
+<button class="w-10 h-10 bg-surface-container-lowest text-on-surface rounded-lg shadow border border-outline-variant flex items-center justify-center active:bg-surface-container">
+<span class="material-symbols-outlined">add</span>
+</button>
+<button class="w-10 h-10 bg-surface-container-lowest text-on-surface rounded-lg shadow border border-outline-variant flex items-center justify-center active:bg-surface-container">
+<span class="material-symbols-outlined">remove</span>
+</button>
+<button class="w-10 h-10 bg-surface-container-lowest text-primary rounded-lg shadow border border-outline-variant flex items-center justify-center active:bg-surface-container mt-2">
+<span class="material-symbols-outlined" data-weight="fill" style="font-variation-settings: 'FILL' 1;">my_location</span>
+</button>
+</div>
+</section>
+<!-- Bento Grid: Immediate Actions -->
+<section class="p-margin-mobile grid grid-cols-2 gap-3 mt-2">
+<!-- Primary SOS Action -->
+<button class="col-span-2 bg-error text-on-error rounded-xl p-stack-md flex items-center justify-between shadow-sm active:scale-[0.98] transition-transform text-left">
+<div class="flex flex-col">
+<span class="font-headline-sm text-headline-sm">SOS Emergency</span>
+<span class="font-body-md text-body-md opacity-90">Dispatch rescue services</span>
+</div>
+<div class="w-12 h-12 bg-on-error/20 rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined text-3xl" data-weight="fill" style="font-variation-settings: 'FILL' 1;">emergency</span>
+</div>
+</button>
+<!-- Secondary Actions -->
+<button class="bg-primary-container text-on-primary-container rounded-xl p-stack-md flex flex-col items-start gap-3 shadow-sm border border-outline-variant/20 active:scale-[0.98] transition-transform text-left">
+<span class="material-symbols-outlined text-3xl">home_work</span>
+<span class="font-label-caps text-label-caps leading-tight">Nearest<br/>Shelter</span>
+</button>
+<button class="bg-surface-container text-on-surface rounded-xl p-stack-md flex flex-col items-start gap-3 shadow-sm border border-outline-variant active:scale-[0.98] transition-transform text-left">
+<span class="material-symbols-outlined text-3xl">report</span>
+<span class="font-label-caps text-label-caps leading-tight">Report<br/>Incident</span>
+</button>
+</section>
+<!-- Latest Alerts List -->
+<section class="px-margin-mobile pb-stack-lg flex flex-col gap-3 mt-4">
+<div class="flex justify-between items-end border-b border-outline-variant pb-2 mb-2">
+<h2 class="font-headline-sm text-headline-sm text-primary">Latest Alerts</h2>
+<button class="font-label-caps text-label-caps text-primary hover:underline">View All</button>
+</div>
+<!-- Alert Item 1 -->
+<div class="bg-surface-container-lowest border-l-[4px] border-l-tertiary-container border border-outline-variant rounded-r-xl p-stack-md shadow-sm flex flex-col gap-2">
+<div class="flex justify-between items-start">
+<span class="font-label-caps text-label-caps text-tertiary-container bg-tertiary-container/10 px-2 py-0.5 rounded">Small Craft Warning</span>
+<span class="font-body-md text-sm text-on-surface-variant whitespace-nowrap ml-2">2 hrs ago</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface">Strong winds and rough seas expected affecting coastal waters south of the island.</p>
+</div>
+<!-- Alert Item 2 -->
+<div class="bg-surface-container-lowest border-l-[4px] border-l-outline border border-outline-variant rounded-r-xl p-stack-md shadow-sm flex flex-col gap-2">
+<div class="flex justify-between items-start">
+<span class="font-label-caps text-label-caps text-on-surface-variant bg-surface-container px-2 py-0.5 rounded">Road Closure</span>
+<span class="font-body-md text-sm text-on-surface-variant whitespace-nowrap ml-2">5 hrs ago</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface">Gorge Road closed due to localized land slippage. Use alternative routes.</p>
+</div>
+</section>
+</main>
+<!-- BottomNavBar -->
+<nav class="bg-surface dark:bg-surface-dim docked full-width bottom-0 rounded-t-xl border-t border-outline-variant dark:border-outline flat no shadows fixed bottom-0 w-full z-50 flex justify-around items-center px-2 py-3 md:hidden">
+<!-- Active Tab: Map -->
+<button class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-full px-4 py-1 active:scale-90 transition-transform">
+<span class="material-symbols-outlined" data-weight="fill" style="font-variation-settings: 'FILL' 1;">map</span>
+<span class="font-label-caps text-label-caps mt-1">Map</span>
+</button>
+<!-- Inactive Tab: Alerts -->
+<button class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-container-high rounded-lg px-3 py-1 active:scale-90 transition-transform">
+<span class="material-symbols-outlined">warning</span>
+<span class="font-label-caps text-[12px] font-bold mt-1">Alerts</span>
+</button>
+<!-- Inactive Tab: Prepare -->
+<button class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-container-high rounded-lg px-3 py-1 active:scale-90 transition-transform">
+<span class="material-symbols-outlined">menu_book</span>
+<span class="font-label-caps text-[12px] font-bold mt-1">Prepare</span>
+</button>
+<!-- Inactive Tab: Contacts -->
+<button class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-container-high rounded-lg px-3 py-1 active:scale-90 transition-transform">
+<span class="material-symbols-outlined">call</span>
+<span class="font-label-caps text-[12px] font-bold mt-1">Contacts</span>
+</button>
+<!-- Inactive Tab: Stories -->
+<button class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-container-high rounded-lg px-3 py-1 active:scale-90 transition-transform">
+<span class="material-symbols-outlined">history</span>
+<span class="font-label-caps text-[12px] font-bold mt-1">Stories</span>
+</button>
+</nav>
+<!-- Footer (Visible below map content on scroll) -->
+<footer class="bg-surface-container-highest dark:bg-surface-container-lowest full-width border-t border-outline-variant flat no shadows w-full py-stack-lg px-margin-mobile md:px-margin-desktop mt-auto pb-24 md:pb-8 flex flex-col items-center text-center gap-4 hidden md:flex">
+<div class="font-headline-sm text-headline-sm text-on-surface">Watch Out JA</div>
+<div class="flex flex-col sm:flex-row gap-4 font-body-md text-body-md">
+<a class="text-on-surface-variant hover:underline" href="#">Emergency Contacts: 119 / 110</a>
+<a class="text-on-surface-variant hover:underline" href="#">Privacy Policy</a>
+<a class="text-on-surface-variant hover:underline" href="#">ODPEM Support</a>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant text-sm mt-4">© 2024 Watch Out JA - Official Emergency Information Platform</p>
+</footer>
+</body></html>

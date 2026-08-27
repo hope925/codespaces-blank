@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Emergency Contacts - Watch Out JA</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-tint": "#3f5f92",
+                        "tertiary-fixed": "#ffdbcc",
+                        "error-container": "#ffdad6",
+                        "surface-bright": "#f9f9fc",
+                        "inverse-primary": "#aac7ff",
+                        "surface-dim": "#dadadc",
+                        "primary-fixed-dim": "#aac7ff",
+                        "surface-container-lowest": "#ffffff",
+                        "primary": "#001736",
+                        "surface": "#ffffff", /* Force pure white surface as requested */
+                        "on-primary-fixed": "#001b3e",
+                        "tertiary-container": "#4f1c01",
+                        "surface-container-high": "#e8e8ea",
+                        "outline": "#747780",
+                        "on-error-container": "#93000a",
+                        "tertiary": "#2e0d00",
+                        "on-tertiary-container": "#ce805b",
+                        "on-secondary-fixed-variant": "#454749",
+                        "surface-container-highest": "#e2e2e5",
+                        "on-tertiary-fixed-variant": "#713617",
+                        "primary-container": "#002b5c",
+                        "on-primary-fixed-variant": "#264779",
+                        "surface-variant": "#e2e2e5",
+                        "on-tertiary": "#ffffff",
+                        "secondary-fixed": "#e2e2e4",
+                        "on-primary": "#ffffff",
+                        "primary-fixed": "#d6e3ff",
+                        "on-error": "#ffffff",
+                        "on-tertiary-fixed": "#351000",
+                        "on-surface-variant": "#43474f",
+                        "on-secondary": "#ffffff",
+                        "surface-container": "#eeeef0",
+                        "tertiary-fixed-dim": "#ffb695",
+                        "on-secondary-container": "#616365",
+                        "inverse-on-surface": "#f0f0f3",
+                        "on-background": "#1a1c1e",
+                        "on-primary-container": "#7594cb",
+                        "secondary-container": "#dfdfe1",
+                        "background": "#ffffff", /* Force pure white background as requested */
+                        "surface-container-low": "#f3f3f6",
+                        "secondary": "#5d5e60",
+                        "on-surface": "#1a1c1e",
+                        "outline-variant": "#c4c6d0",
+                        "secondary-fixed-dim": "#c6c6c8",
+                        "on-secondary-fixed": "#1a1c1d",
+                        "inverse-surface": "#2f3133",
+                        "error": "#ba1a1a",
+                        /* Custom Jamaican Colors as requested, mapped to semantic names if needed, but keeping JSON primary */
+                        "ja-green": "#009B3A",
+                        "ja-yellow": "#FED100",
+                        "ja-black": "#000000"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "gutter": "16px",
+                        "unit": "4px",
+                        "stack-lg": "32px",
+                        "margin-desktop": "48px",
+                        "margin-mobile": "16px",
+                        "stack-md": "16px",
+                        "stack-sm": "8px"
+                    },
+                    "fontFamily": {
+                        "display-lg-mobile": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "headline-sm": ["Inter"],
+                        "label-caps": ["Inter"],
+                        "body-md": ["Inter"],
+                        "display-lg": ["Inter"],
+                        "status-lg": ["Inter"],
+                        "headline-md": ["Inter"]
+                    },
+                    "fontSize": {
+                        "display-lg-mobile": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+                        "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }],
+                        "headline-sm": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+                        "label-caps": ["14px", { "lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "700" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "display-lg": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "status-lg": ["22px", { "lineHeight": "28px", "fontWeight": "800" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "600" }]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        /* Fallback for Inter if needed, though Tailwind uses config */
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+<body class="bg-background text-on-background min-h-screen pb-24 relative overflow-x-hidden pt-16">
+<!-- TopAppBar -->
+<header class="flex justify-between items-center w-full px-margin-mobile md:px-margin-desktop h-16 fixed top-0 z-50 bg-primary dark:bg-primary docked full-width top-0">
+<div class="flex flex-col">
+<span class="font-status-lg text-status-lg text-on-primary dark:text-on-primary tracking-tight">Watch Out JA</span>
+<span class="text-[10px] text-ja-yellow font-bold uppercase tracking-wider">Your Trusted Eye on the Horizon</span>
+</div>
+<div class="flex items-center gap-4 text-on-primary">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">notifications</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">search</span>
+</div>
+<!-- Desktop Nav (Hidden on Mobile) -->
+<nav class="hidden md:flex gap-6 absolute left-1/2 transform -translate-x-1/2 h-full items-end">
+<a class="font-headline-sm text-headline-sm-mobile md:text-headline-sm text-on-primary-container dark:text-primary-fixed opacity-80 hover:opacity-100 hover:bg-primary-container transition-colors px-2 pb-2" href="#">Map</a>
+<a class="font-headline-sm text-headline-sm-mobile md:text-headline-sm text-on-primary-container dark:text-primary-fixed opacity-80 hover:opacity-100 hover:bg-primary-container transition-colors px-2 pb-2" href="#">Alerts</a>
+<a class="font-headline-sm text-headline-sm-mobile md:text-headline-sm text-on-primary-container dark:text-primary-fixed opacity-80 hover:opacity-100 hover:bg-primary-container transition-colors px-2 pb-2" href="#">Preparedness</a>
+<a class="font-headline-sm text-headline-sm-mobile md:text-headline-sm text-on-primary border-b-2 border-on-primary pb-1 px-2" href="#">Contacts</a>
+<a class="font-headline-sm text-headline-sm-mobile md:text-headline-sm text-on-primary-container dark:text-primary-fixed opacity-80 hover:opacity-100 hover:bg-primary-container transition-colors px-2 pb-2" href="#">Stories</a>
+</nav>
+</header>
+<!-- Main Content Canvas -->
+<main class="px-margin-mobile pt-stack-lg">
+<div class="mb-stack-lg relative">
+<div class="absolute inset-0 bg-ja-green rounded-xl transform -skew-y-2 translate-y-2 opacity-10"></div>
+<div class="relative bg-surface border border-outline-variant rounded-xl p-stack-md flex flex-col items-center text-center">
+<span class="material-symbols-outlined text-4xl text-ja-yellow mb-2" style="font-variation-settings: 'FILL' 1;">local_hospital</span>
+<h1 class="font-display-lg-mobile text-display-lg-mobile text-primary">Emergency Contacts</h1>
+<p class="font-body-md text-body-md text-on-surface-variant mt-2">Immediate assistance directory. Tap to call directly from your device.</p>
+</div>
+</div>
+<!-- Search Bar -->
+<div class="mb-stack-md sticky top-[72px] z-40 bg-background py-2">
+<div class="relative">
+<span class="material-symbols-outlined absolute left-4 top-1/2 transform -translate-y-1/2 text-outline">search</span>
+<input class="w-full pl-12 pr-4 h-12 bg-surface-container-low border border-outline-variant rounded-full font-body-md text-body-md text-on-surface focus:outline-none focus:border-ja-green focus:ring-1 focus:ring-ja-green transition-shadow shadow-sm" placeholder="Search police, fire, parish..." type="text"/>
+</div>
+</div>
+<!-- Primary Emergency Numbers (Bento Grid Style) -->
+<h2 class="font-headline-sm text-headline-sm text-on-surface mb-stack-sm mt-stack-md">National Hotlines</h2>
+<div class="grid grid-cols-2 gap-gutter mb-stack-lg">
+<!-- Police -->
+<button class="bg-primary text-on-primary p-stack-md rounded-xl flex flex-col items-start justify-between relative overflow-hidden group shadow-[0_4px_10px_rgba(0,0,0,0.1)] active:scale-95 transition-transform text-left border-l-4 border-ja-yellow">
+<span class="material-symbols-outlined text-3xl mb-4" style="font-variation-settings: 'FILL' 1;">local_police</span>
+<span class="font-headline-sm text-headline-sm">Police</span>
+<span class="font-display-lg-mobile text-display-lg-mobile mt-1">119</span>
+<div class="absolute -right-4 -bottom-4 opacity-10 transform rotate-12 transition-transform group-hover:scale-110">
+<span class="material-symbols-outlined text-8xl" style="font-variation-settings: 'FILL' 1;">local_police</span>
+</div>
+</button>
+<!-- Fire / Ambulance -->
+<button class="bg-error text-on-error p-stack-md rounded-xl flex flex-col items-start justify-between relative overflow-hidden group shadow-[0_4px_10px_rgba(0,0,0,0.1)] active:scale-95 transition-transform text-left border-l-4 border-ja-yellow">
+<span class="material-symbols-outlined text-3xl mb-4" style="font-variation-settings: 'FILL' 1;">emergency</span>
+<span class="font-headline-sm text-headline-sm">Fire / EMS</span>
+<span class="font-display-lg-mobile text-display-lg-mobile mt-1">110</span>
+<div class="absolute -right-4 -bottom-4 opacity-10 transform rotate-12 transition-transform group-hover:scale-110">
+<span class="material-symbols-outlined text-8xl" style="font-variation-settings: 'FILL' 1;">emergency</span>
+</div>
+</button>
+</div>
+<!-- Parish Level Contacts -->
+<h2 class="font-headline-sm text-headline-sm text-on-surface mb-stack-sm flex items-center justify-between">
+<span>Parish Directory</span>
+<span class="material-symbols-outlined text-outline" style="font-variation-settings: 'FILL' 0;">filter_list</span>
+</h2>
+<div class="flex flex-col gap-unit">
+<!-- Kingston & St. Andrew -->
+<div class="bg-surface border border-outline-variant rounded-lg p-stack-sm flex items-center justify-between shadow-sm border-l-4 border-l-ja-green">
+<div class="flex flex-col">
+<span class="font-headline-sm text-headline-sm text-on-surface">Kingston &amp; St. Andrew ODPEM</span>
+<span class="font-body-md text-body-md text-on-surface-variant">Disaster Coordinator</span>
+</div>
+<a class="bg-surface-container-high text-primary p-2 rounded-full active:scale-90 transition-transform" href="tel:8769069674">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">call</span>
+</a>
+</div>
+<!-- St. Catherine -->
+<div class="bg-surface border border-outline-variant rounded-lg p-stack-sm flex items-center justify-between shadow-sm border-l-4 border-l-ja-green">
+<div class="flex flex-col">
+<span class="font-headline-sm text-headline-sm text-on-surface">St. Catherine Parish Council</span>
+<span class="font-body-md text-body-md text-on-surface-variant">Emergency Operations Center</span>
+</div>
+<a class="bg-surface-container-high text-primary p-2 rounded-full active:scale-90 transition-transform" href="tel:8769843111">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">call</span>
+</a>
+</div>
+<!-- St. James -->
+<div class="bg-surface border border-outline-variant rounded-lg p-stack-sm flex items-center justify-between shadow-sm border-l-4 border-l-ja-green">
+<div class="flex flex-col">
+<span class="font-headline-sm text-headline-sm text-on-surface">St. James Municipal Corp.</span>
+<span class="font-body-md text-body-md text-on-surface-variant">Disaster Coordinator</span>
+</div>
+<a class="bg-surface-container-high text-primary p-2 rounded-full active:scale-90 transition-transform" href="tel:8769525500">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">call</span>
+</a>
+</div>
+</div>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 w-full z-50 flex justify-around items-center px-2 py-3 md:hidden bg-surface dark:bg-surface-dim docked full-width bottom-0 rounded-t-xl border-t border-outline-variant dark:border-outline flat no shadows">
+<a class="flex flex-col items-center justify-center text-on-surface-variant font-label-caps text-label-caps hover:bg-surface-container-high p-2 rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined mb-1" style="font-variation-settings: 'FILL' 0;">map</span>
+            Map
+        </a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant font-label-caps text-label-caps hover:bg-surface-container-high p-2 rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined mb-1" style="font-variation-settings: 'FILL' 0;">warning</span>
+            Alerts
+        </a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant font-label-caps text-label-caps hover:bg-surface-container-high p-2 rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined mb-1" style="font-variation-settings: 'FILL' 0;">menu_book</span>
+            Prepare
+        </a>
+<a class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-full px-4 py-1 font-label-caps text-label-caps Active: scale-90 transition-transform" href="#">
+<span class="material-symbols-outlined mb-1" style="font-variation-settings: 'FILL' 1;">call</span>
+            Contacts
+        </a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant font-label-caps text-label-caps hover:bg-surface-container-high p-2 rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined mb-1" style="font-variation-settings: 'FILL' 0;">history</span>
+            Stories
+        </a>
+</nav>
+</body></html>
