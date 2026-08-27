@@ -8,6 +8,7 @@ import {
   ChevronDown,
   CircleHelp,
   Clock3,
+  CreditCard,
   Droplets,
   ExternalLink,
   Flame,
@@ -25,11 +26,12 @@ import {
   Share2,
   ShieldCheck,
   Siren,
+  Smartphone,
   Waves,
   X,
 } from 'lucide-react'
 
-type Route = 'home' | 'alerts' | 'preparedness' | 'shelters' | 'contacts' | 'history' | 'community'
+type Route = 'home' | 'alerts' | 'preparedness' | 'shelters' | 'contacts' | 'history' | 'community' | 'support'
 type Severity = 'warning' | 'watch' | 'all-clear'
 type AlertFilter = 'all' | 'active' | 'flooding' | 'wind'
 type DisasterType = 'Hurricane' | 'Earthquake' | 'Flood' | 'Landslide'
@@ -115,6 +117,7 @@ const navItems: { route: Route; label: string; icon: typeof House }[] = [
   { route: 'contacts', label: 'Contacts', icon: Phone },
   { route: 'history', label: 'History', icon: History },
   { route: 'community', label: 'Community', icon: MessageCircle },
+  { route: 'support', label: 'Support', icon: HeartPulse },
 ]
 
 function getRoute(): Route {
@@ -221,6 +224,7 @@ function App() {
         {route === 'contacts' && <ContactsPage />}
         {route === 'history' && <HistoryPage />}
         {route === 'community' && communityUser && <CommunityPage user={communityUser} />}
+        {route === 'support' && <SupportPage />}
       </main>
 
       <footer><span>Watch Out JA</span><span>Information should be clear when it matters most.</span><span className="footer-status"><Radio size={14} /> Simulated data · Updated 2 min ago</span></footer>
@@ -387,6 +391,33 @@ function CommunitySignInModal({ onClose, onSignIn }: { onClose: () => void; onSi
   }
 
   return <div className="composer-backdrop" role="presentation" onClick={onClose}><form className="signin-modal" onSubmit={submit} onClick={(event) => event.stopPropagation()}><div className="composer-heading"><div><p className="eyebrow">Community access</p><h2>Sign in to read and share stories</h2></div><button type="button" className="icon-button" onClick={onClose} aria-label="Close sign in"><X size={19} /></button></div><p className="composer-copy">Tell us where you are from so community stories can stay connected to the parish they came from.</p><label>Username<input required value={username} onChange={(event) => setUsername(event.target.value)} autoComplete="username" /></label><label>Email address<input required type="email" value={email} onChange={(event) => setEmail(event.target.value)} autoComplete="email" /></label><label>Password<input required type="password" value={password} onChange={(event) => setPassword(event.target.value)} autoComplete="current-password" /></label><label>Your parish<select value={parish} onChange={(event) => setParish(event.target.value)}>{parishes.map((option) => <option key={option}>{option}</option>)}</select></label><button type="submit" className="button primary signin-submit"><MessageCircle size={17} /> Continue to Community</button><small className="form-note">Prototype sign-in: your password is only used to validate this form and is not saved.</small></form></div>
+}
+
+function SupportPage() {
+  const [volunteerSubmitted, setVolunteerSubmitted] = useState(false)
+  const [donationSubmitted, setDonationSubmitted] = useState(false)
+  const [amount, setAmount] = useState('5000')
+  const [frequency, setFrequency] = useState('One-time')
+  const [paymentMethod, setPaymentMethod] = useState('Card')
+  const disasterOptions = ['Any emergency', 'Hurricane cleanup', 'Flood recovery', 'Earthquake response', 'Landslide cleanup', 'Community support']
+  const parishes = ['Kingston & St. Andrew', 'St. Catherine', 'Clarendon', 'Manchester', 'St. Elizabeth', 'Portland', 'St. Thomas']
+  const donationFunds = ['General Emergency Fund', 'Hurricane recovery', 'Medical supplies drive', 'Shelter and food support']
+
+  const submitVolunteer = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+    setVolunteerSubmitted(true)
+  }
+
+  const submitDonation = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+    setDonationSubmitted(true)
+  }
+
+  return <PageIntro eyebrow="Support and relief" title="Volunteer & donate" copy="Give your time or support trusted relief efforts across Jamaica." action={<span className="source-badge"><ShieldCheck size={15} /> Prototype forms</span>}><div className="needs-callout"><div><p className="eyebrow">Current needs</p><h2>Small acts make response stronger.</h2></div><ul><li>Medical professionals in St. Thomas and Portland</li><li>Potable water and essential supplies</li><li>Heavy-duty transport for cleanup efforts</li></ul></div><div className="support-grid"><section className="support-panel"><div className="support-heading"><HeartPulse size={22} /><div><p className="eyebrow">Lend a hand</p><h2>Become a volunteer</h2></div></div>{volunteerSubmitted ? <Confirmation title="Volunteer registration received" copy="Thank you. A local response coordinator will follow up using your email." onReset={() => setVolunteerSubmitted(false)} /> : <form className="support-form" onSubmit={submitVolunteer}><label>Full name<input required placeholder="Jane Doe" /></label><label>Email address<input required type="email" placeholder="jane@example.com" /></label><label>Parish or area<select required>{parishes.map((option) => <option key={option}>{option}</option>)}</select></label><label>How would you like to help?<select required>{disasterOptions.map((option) => <option key={option}>{option}</option>)}</select></label><button className="button primary" type="submit"><HeartPulse size={17} /> Register as volunteer</button></form>}</section><section className="support-panel donation-panel"><div className="support-heading"><CreditCard size={22} /><div><p className="eyebrow">Give securely</p><h2>Make a donation</h2></div></div>{donationSubmitted ? <Confirmation title="Donation details received" copy={`Your ${frequency.toLowerCase()} gift of JMD $${Number(amount || 0).toLocaleString()} is ready for secure processing.`} onReset={() => setDonationSubmitted(false)} /> : <form className="support-form" onSubmit={submitDonation}><label>Donate to<select required>{donationFunds.map((option) => <option key={option}>{option}</option>)}</select></label><fieldset><legend>Amount (JMD)</legend><div className="amount-options">{['1000', '5000', '10000'].map((option) => <button key={option} type="button" className={amount === option ? 'amount-option selected' : 'amount-option'} onClick={() => setAmount(option)}>JMD ${Number(option).toLocaleString()}</button>)}</div><input aria-label="Custom donation amount" type="number" min="1" placeholder="Other amount" value={['1000', '5000', '10000'].includes(amount) ? '' : amount} onChange={(event) => setAmount(event.target.value)} /></fieldset><fieldset><legend>Frequency</legend><div className="radio-options"><label><input type="radio" name="frequency" value="One-time" checked={frequency === 'One-time'} onChange={(event) => setFrequency(event.target.value)} /> One-time</label><label><input type="radio" name="frequency" value="Monthly" checked={frequency === 'Monthly'} onChange={(event) => setFrequency(event.target.value)} /> Monthly</label></div></fieldset><label>Payment method<select value={paymentMethod} onChange={(event) => setPaymentMethod(event.target.value)}><option>Card</option><option>Bank transfer</option><option>Mobile money</option></select></label>{paymentMethod === 'Card' && <div className="payment-fields"><label>Card number<input required placeholder="0000 0000 0000 0000" inputMode="numeric" /></label><div className="form-grid"><label>Expiry<input required placeholder="MM/YY" /></label><label>CVV<input required placeholder="123" inputMode="numeric" /></label></div></div>}<button className="button primary" type="submit"><CreditCard size={17} /> Continue to secure donation</button><small className="form-note"><Smartphone size={13} /> This prototype does not process or store payments.</small></form>}</section></div></PageIntro>
+}
+
+function Confirmation({ title, copy, onReset }: { title: string; copy: string; onReset: () => void }) {
+  return <div className="form-confirmation"><span className="past-icon"><Check size={17} /></span><h3>{title}</h3><p>{copy}</p><button type="button" className="text-button" onClick={onReset}>Submit another response <ArrowRight size={15} /></button></div>
 }
 
 function Contact({ name, detail, number }: { name: string; detail: string; number: string }) { return <a className="contact-row" href={`tel:${number.replace(/\D/g, '')}`}><span className="contact-avatar"><Phone size={17} /></span><span><strong>{name}</strong><small>{detail}</small></span><span className="contact-number">{number}</span><Phone size={17} /></a> }
