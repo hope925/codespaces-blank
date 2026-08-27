@@ -1,0 +1,17 @@
+Watch Out JA Build Journal
+
+Checkpoint 0 - Product analysis complete
+- Source of truth: Docs/Watch Out JA - PRD.md, Docs/Watch Out JA - User Journey.md, and Designs/DESIGN.md.
+- First vertical slice: public emergency status experience with homepage map, alert detail, preparedness, shelters, and contacts.
+- Implementation direction: React + TypeScript + Vite, local fixture data behind replaceable services, guest-first flows, local persistence, and PWA resilience.
+- Visual source of truth: Bold Jamaican Heritage tokens in Designs/DESIGN.md. The HTML samples are interaction and layout references; their conflicting light-mode tokens will not override the design system.
+
+Checkpoint 1 - Public MVP foundation implemented and validated
+- Added a Vite + React + TypeScript app at the repository root.
+- Added responsive shared navigation, Jamaican Heritage dark visual system, simulated emergency alerts, parish selection, map preview, shelters, contacts, and preparedness checklist.
+- Guest workflows do not require an account. Parish preference and checklist progress persist locally.
+- Alert detail includes verified/simulated-source labeling, recommended action, affected areas, timestamps, and share/clipboard fallback.
+- Validation: npm install completed; npm run build passes TypeScript and Vite production bundling.
+- Remaining planned work: real map/fallback, PWA caching, notification permission/deep links, onboarding, downloads, backend integrations, and Phase 2 community/history features.
+
+Next checkpoint: add PWA/offline behavior and complete the highest-risk alert deep-link flow.
