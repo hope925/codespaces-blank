@@ -5,7 +5,6 @@ import {
   Bell,
   CalendarDays,
   Check,
-  ChevronDown,
   CircleHelp,
   Clock3,
   CreditCard,
@@ -139,7 +138,7 @@ function getRoute(): Route {
 
 function App() {
   const [route, setRoute] = useState<Route>(getRoute)
-  const [parish, setParish] = useState(() => localStorage.getItem('watchout-parish') ?? 'St. Catherine')
+  const [parish] = useState(() => localStorage.getItem('watchout-parish') ?? 'St. Catherine')
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [activeAlert, setActiveAlert] = useState<Alert | null>(null)
   const [checked, setChecked] = useState<string[]>(() => JSON.parse(localStorage.getItem('watchout-checklist') ?? '[]'))
@@ -155,10 +154,6 @@ function App() {
     window.addEventListener('hashchange', onHashChange)
     return () => window.removeEventListener('hashchange', onHashChange)
   }, [])
-
-  useEffect(() => {
-    localStorage.setItem('watchout-parish', parish)
-  }, [parish])
 
   useEffect(() => {
     localStorage.setItem('watchout-checklist', JSON.stringify(checked))
@@ -229,7 +224,7 @@ function App() {
       </div>
 
       <main>
-        {route === 'home' && <HomePage parish={parish} setParish={setParish} navigate={navigate} openAlert={setActiveAlert} />}
+        {route === 'home' && <HomePage parish={parish} navigate={navigate} openAlert={setActiveAlert} />}
         {route === 'alerts' && <AlertsPage openAlert={setActiveAlert} />}
         {route === 'preparedness' && <PreparednessPage checked={checked} toggleChecklist={toggleChecklist} />}
         {route === 'shelters' && <SheltersPage parish={parish} />}
@@ -253,17 +248,13 @@ function NavLink({ route, label, current, onClick }: { route: Route; label: stri
   return <button className={current === route ? 'nav-link active' : 'nav-link'} onClick={() => onClick(route)}>{label}{current === route && <span />}</button>
 }
 
-function HomePage({ parish, setParish, navigate, openAlert }: { parish: string; setParish: (value: string) => void; navigate: (route: Route) => void; openAlert: (alert: Alert) => void }) {
+function HomePage({ parish, navigate, openAlert }: { parish: string; navigate: (route: Route) => void; openAlert: (alert: Alert) => void }) {
   return <>
     <section className="hero-grid page-width">
       <div className="hero-copy">
         <p className="eyebrow"><span className="live-dot" /> Live island status</p>
         <h1>Know what’s happening.<br /><em>Know what to do.</em></h1>
         <p className="hero-lede">Clear, trusted emergency information for every parish in Jamaica.</p>
-        <div className="hero-controls">
-          <label htmlFor="parish">Your parish</label>
-          <div className="select-wrap"><MapPin size={17} /><select id="parish" value={parish} onChange={(event) => setParish(event.target.value)}><option>St. Catherine</option><option>Kingston</option><option>St. Andrew</option><option>St. Thomas</option><option>Portland</option><option>Clarendon</option></select><ChevronDown size={16} /></div>
-        </div>
       </div>
       <MapPreview parish={parish} />
     </section>
