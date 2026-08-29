@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import {
   AlertTriangle,
   ArrowRight,
@@ -32,6 +32,7 @@ import {
   Waves,
   X,
 } from 'lucide-react'
+import { getFallbackMapSummary, getMapHazardsForParish, getParishCoordinates } from './mapData'
 
 type Route = 'home' | 'alerts' | 'preparedness' | 'shelters' | 'contacts' | 'history' | 'community' | 'support'
 type Severity = 'warning' | 'watch' | 'all-clear'
@@ -140,6 +141,7 @@ function getRoute(): Route {
 function App() {
   const [route, setRoute] = useState<Route>(getRoute)
   const [parish, setParish] = useState(() => localStorage.getItem('watchout-parish') ?? 'St. Catherine')
+  const [dataSaver, setDataSaver] = useState(() => localStorage.getItem('watchout-data-saver') === 'true')
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [activeAlert, setActiveAlert] = useState<Alert | null>(null)
   const [checked, setChecked] = useState<string[]>(() => JSON.parse(localStorage.getItem('watchout-checklist') ?? '[]'))
@@ -163,6 +165,10 @@ function App() {
   useEffect(() => {
     localStorage.setItem('watchout-parish', parish)
   }, [parish])
+
+  useEffect(() => {
+    localStorage.setItem('watchout-data-saver', String(dataSaver))
+  }, [dataSaver])
 
   useEffect(() => {
     if (route === 'community' && !communityUser) setIsSignInOpen(true)
@@ -229,7 +235,7 @@ function App() {
       </div>
 
       <main>
-        {route === 'home' && <HomePage parish={parish} setParish={setParish} navigate={navigate} openAlert={setActiveAlert} />}
+        {route === 'home' && <HomePage parish={parish} setParish={setParish} dataSaver={dataSaver} setDataSaver={setDataSaver} navigate={navigate} openAlert={setActiveAlert} />}
         {route === 'alerts' && <AlertsPage openAlert={setActiveAlert} />}
         {route === 'preparedness' && <PreparednessPage checked={checked} toggleChecklist={toggleChecklist} />}
         {route === 'shelters' && <SheltersPage parish={parish} />}
@@ -253,7 +259,7 @@ function NavLink({ route, label, current, onClick }: { route: Route; label: stri
   return <button className={current === route ? 'nav-link active' : 'nav-link'} onClick={() => onClick(route)}>{label}{current === route && <span />}</button>
 }
 
-function HomePage({ parish, setParish, navigate, openAlert }: { parish: string; setParish: (value: string) => void; navigate: (route: Route) => void; openAlert: (alert: Alert) => void }) {
+function HomePage({ parish, setParish, dataSaver, setDataSaver, navigate, openAlert }: { parish: string; setParish: (value: string) => void; dataSaver: boolean; setDataSaver: (value: boolean) => void; navigate: (route: Route) => void; openAlert: (alert: Alert) => void }) {
   return <>
     <section className="hero-grid page-width">
       <div className="hero-copy">
@@ -263,9 +269,13 @@ function HomePage({ parish, setParish, navigate, openAlert }: { parish: string; 
         <div className="hero-controls">
           <label htmlFor="parish">Your parish</label>
           <div className="select-wrap"><MapPin size={17} /><select id="parish" value={parish} onChange={(event) => setParish(event.target.value)}><option>Kingston</option><option>St. Andrew</option><option>St. Catherine</option><option>Clarendon</option><option>Manchester</option><option>St. Elizabeth</option><option>Westmoreland</option><option>Hanover</option><option>St. James</option><option>Trelawny</option><option>St. Ann</option><option>St. Mary</option><option>Portland</option><option>St. Thomas</option></select><ChevronDown size={16} /></div>
+          <label className="data-saver-toggle" htmlFor="data-saver-toggle">
+            <input id="data-saver-toggle" type="checkbox" checked={dataSaver} onChange={() => setDataSaver(!dataSaver)} />
+            <span>Data saver mode</span>
+          </label>
         </div>
       </div>
-      <MapPreview parish={parish} />
+      <MapPreview parish={parish} dataSaver={dataSaver} />
     </section>
     <section className="status-band"><div className="page-width status-inner"><div className="status-label"><span className="status-icon"><ShieldCheck size={21} /></span><div><span className="eyebrow">Your local status</span><strong>Watch Out for {parish}</strong></div></div><div className="status-clear"><span className="check-circle"><Check size={16} /></span><strong>All clear in your parish</strong><span>Last checked 2 min ago</span></div></div></section>
     <section className="quick-grid page-width"><ActionCard icon={<ShieldCheck />} title="Get prepared" copy="Build your 72-hour kit" onClick={() => navigate('preparedness')} accent="green" /><ActionCard icon={<House />} title="Find a shelter" copy="See open safe zones" onClick={() => navigate('shelters')} accent="gold" /><ActionCard icon={<Phone />} title="Emergency contacts" copy="Call help directly" onClick={() => navigate('contacts')} accent="black" /></section>
@@ -274,8 +284,48 @@ function HomePage({ parish, setParish, navigate, openAlert }: { parish: string; 
   </>
 }
 
-function MapPreview({ parish }: { parish: string }) {
-  return <div className="map-preview"><iframe title={`Interactive map of Jamaica centered near ${parish}`} src="https://www.openstreetmap.org/export/embed.html?bbox=-78.7%2C17.6%2C-76.0%2C18.6&layer=mapnik&marker=18.1096%2C-77.2975" /><div className="map-overlay-label"><MapPin size={14} /> Jamaica hazard map</div><div className="map-legend"><span><i className="legend-dot red" /> Active alert</span><span><i className="legend-dot green" /> Shelter</span></div><span className="map-updated"><Clock3 size={13} /> Live map · Updated 2 min ago</span></div>
+function MapPreview({ parish, dataSaver }: { parish: string; dataSaver: boolean }) {
+  const coordinates = useMemo(() => getParishCoordinates(parish), [parish])
+  const hazards = useMemo(() => getMapHazardsForParish(parish), [parish])
+  const mapUrl = `https://www.openstreetmap.org/export/embed.html?bbox=${coordinates.lng - 0.22}%2C${coordinates.lat - 0.18}%2C${coordinates.lng + 0.22}%2C${coordinates.lat + 0.18}&layer=mapnik&marker=${coordinates.lat}%2C${coordinates.lng}`
+  const shouldUseFallback = dataSaver || !navigator.onLine
+
+  return <div className="map-preview map-shell">
+    {shouldUseFallback ? (
+      <div className="map-fallback" aria-label={`Static fallback map for ${parish}`}>
+        <div className="map-fallback-header">
+          <span className="map-fallback-tag">{dataSaver ? 'Data saver' : 'Offline mode'}</span>
+          <strong>{parish}</strong>
+        </div>
+        <div className="map-fallback-grid" aria-hidden="true">
+          <span className="map-fallback-wave" />
+          <span className="map-fallback-wave wave-2" />
+        </div>
+        <div className="map-fallback-summary">{getFallbackMapSummary(parish)}</div>
+      </div>
+    ) : (
+      <iframe title={`Interactive map of Jamaica centered near ${parish}`} src={mapUrl} />
+    )}
+
+    {!shouldUseFallback && (
+      <div className="map-hazard-layer" aria-label={`Hazard overlays for ${parish}`}>
+        {hazards.map((hazard) => {
+          const left = 50 + ((hazard.center.lng - coordinates.lng) / 0.34) * 100
+          const top = 50 + ((hazard.center.lat - coordinates.lat) / 0.28) * 100
+          const levelClass = hazard.level === 'critical' ? 'critical' : hazard.level === 'high' ? 'high' : hazard.level === 'moderate' ? 'moderate' : 'low'
+
+          return <div key={hazard.id} className={`hazard-pill ${levelClass}`} style={{ left: `${Math.min(86, Math.max(10, left))}%`, top: `${Math.min(82, Math.max(14, top))}%` }}>
+            <span className="hazard-dot" />
+            {hazard.label}
+          </div>
+        })}
+      </div>
+    )}
+
+    <div className="map-overlay-label"><MapPin size={14} /> {parish} hazard map</div>
+    <div className="map-legend"><span><i className="legend-dot red" /> Active alert</span><span><i className="legend-dot green" /> Safe zone</span></div>
+    <span className="map-updated"><Clock3 size={13} /> {shouldUseFallback ? 'Static fallback · Offline-safe view' : 'Live map · Updated 2 min ago'}</span>
+  </div>
 }
 
 function ActionCard({ icon, title, copy, onClick, accent }: { icon: React.ReactNode; title: string; copy: string; onClick: () => void; accent: string }) {
