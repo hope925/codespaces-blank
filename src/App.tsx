@@ -32,7 +32,21 @@ import {
   Waves,
   X,
 } from 'lucide-react'
+import { getAlertDeepLink, getNotificationPermissionState, getSmsFallbackLink, isNotificationSupported } from './notificationHelpers'
 import { getFallbackMapSummary, getMapHazardsForParish, getParishCoordinates } from './mapData'
+
+function urlBase64ToUint8Array(base64String: string) {
+  const padding = '='.repeat((4 - (base64String.length % 4)) % 4)
+  const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/')
+  const rawData = atob(base64)
+  const outputArray = new Uint8Array(rawData.length)
+
+  for (let index = 0; index < rawData.length; index += 1) {
+    outputArray[index] = rawData.charCodeAt(index)
+  }
+
+  return outputArray
+}
 
 type Route = 'home' | 'alerts' | 'preparedness' | 'shelters' | 'contacts' | 'history' | 'community' | 'support'
 type Severity = 'warning' | 'watch' | 'all-clear'
@@ -142,6 +156,8 @@ function App() {
   const [route, setRoute] = useState<Route>(getRoute)
   const [parish, setParish] = useState(() => localStorage.getItem('watchout-parish') ?? 'St. Catherine')
   const [dataSaver, setDataSaver] = useState(() => localStorage.getItem('watchout-data-saver') === 'true')
+  const [notificationPermission, setNotificationPermission] = useState<'default' | 'granted' | 'denied' | 'unsupported'>(() => getNotificationPermissionState())
+  const [pushEnabled, setPushEnabled] = useState(() => localStorage.getItem('watchout-push-enabled') === 'true')
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [activeAlert, setActiveAlert] = useState<Alert | null>(null)
   const [checked, setChecked] = useState<string[]>(() => JSON.parse(localStorage.getItem('watchout-checklist') ?? '[]'))
@@ -171,8 +187,21 @@ function App() {
   }, [dataSaver])
 
   useEffect(() => {
+    localStorage.setItem('watchout-push-enabled', String(pushEnabled))
+  }, [pushEnabled])
+
+  useEffect(() => {
     if (route === 'community' && !communityUser) setIsSignInOpen(true)
   }, [route, communityUser])
+
+  useEffect(() => {
+    if (pushEnabled && notificationPermission === 'granted' && 'Notification' in window) {
+      new Notification('Watch Out JA alerts enabled', {
+        body: 'You will receive browser alerts for emergency updates in this area.',
+        tag: 'watchout-ja-alerts',
+      })
+    }
+  }, [pushEnabled, notificationPermission])
 
   const navigate = (nextRoute: Route) => {
     if (nextRoute === 'community' && !communityUser) {
@@ -209,6 +238,90 @@ function App() {
     }
   }
 
+  const sendTestAlert = async (title: string, body: string) => {
+    try {
+      const response = await fetch('/api/send-alert', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          title,
+          body,
+          data: { url: '/#/alerts' },
+        }),
+      })
+      return response.ok
+    } catch {
+      return false
+    }
+  }
+
+  const enableNotifications = async () => {
+    const supported = isNotificationSupported()
+    if (!supported) {
+      setNotificationPermission('unsupported')
+      return
+    }
+
+    const permission = await Notification.requestPermission()
+    setNotificationPermission(permission)
+
+    if (permission === 'granted' && 'serviceWorker' in navigator) {
+      const registration = await navigator.serviceWorker.ready
+      const response = await fetch('/api/public-key')
+      const { publicKey } = await response.json()
+      const applicationServerKey = urlBase64ToUint8Array(publicKey)
+      const subscription = await registration.pushManager.subscribe({
+        userVisibleOnly: true,
+        applicationServerKey,
+      })
+
+      await fetch('/api/subscribe', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          subscription,
+          parish,
+          platform: navigator.userAgent,
+        }),
+      })
+      setPushEnabled(true)
+      return
+    }
+
+    setPushEnabled(false)
+  }
+
+  const triggerAlertNotification = async (alert: Alert) => {
+    const link = getAlertDeepLink('alerts')
+
+    if ('Notification' in window && Notification.permission === 'granted') {
+      const notification = new Notification(`Watch Out JA: ${alert.label}`, {
+        body: alert.summary,
+        tag: `watchout-${alert.id}`,
+        data: { url: link },
+      })
+
+      notification.onclick = () => {
+        window.focus()
+        window.location.hash = link
+      }
+    }
+
+    try {
+      await fetch('/api/send-alert', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          title: `Watch Out JA: ${alert.label}`,
+          body: alert.summary,
+          data: { url: link },
+        }),
+      })
+    } catch {
+      // Ignore push-send failures in local dev without a live backend
+    }
+  }
+
   return (
     <div className="app-shell">
       <header className="topbar">
@@ -221,7 +334,10 @@ function App() {
         </nav>
         <div className="topbar-actions">
           <button className="icon-button" aria-label="Search"><Search size={19} /></button>
-          <button className="icon-button notification-button" aria-label="Notifications"><Bell size={19} /><span /></button>
+          <button className="icon-button notification-button" onClick={enableNotifications} aria-label="Notifications">
+            <Bell size={19} />
+            {notificationPermission === 'granted' && <span />}
+          </button>
           <button className="menu-button" onClick={() => setIsMenuOpen(!isMenuOpen)} aria-label="Toggle navigation menu" aria-expanded={isMenuOpen}><Menu size={22} /></button>
         </div>
       </header>
@@ -231,7 +347,11 @@ function App() {
       <div className="alert-strip" role="status">
         <div className="alert-strip-icon"><AlertTriangle size={18} /></div>
         <div><strong>FLASH FLOOD WARNING</strong><span>St. Andrew and Kingston · Move to higher ground</span></div>
-        <button onClick={() => setActiveAlert(alerts[0])}>View alert <ArrowRight size={16} /></button>
+        <button onClick={() => {
+          const alert = alerts[0]
+          setActiveAlert(alert)
+          triggerAlertNotification(alert)
+        }}>View alert <ArrowRight size={16} /></button>
       </div>
 
       <main>
@@ -242,14 +362,30 @@ function App() {
         {route === 'contacts' && <ContactsPage />}
         {route === 'history' && <HistoryPage />}
         {route === 'community' && communityUser && <CommunityPage user={communityUser} />}
-        {route === 'support' && <SupportPage />}
+        {route === 'support' && <SupportPage sendTestAlert={sendTestAlert} />}
       </main>
 
-      <footer><span>Watch Out JA</span><span>Information should be clear when it matters most.</span><span className="footer-status"><Radio size={14} /> Simulated data · Updated 2 min ago</span></footer>
+      <footer>
+        <span>Watch Out JA</span>
+        <span>Information should be clear when it matters most.</span>
+        <span className="footer-status">
+          <Radio size={14} />
+          {pushEnabled ? 'Push alerts enabled' : notificationPermission === 'unsupported' ? 'Browser notifications unavailable' : 'Browser alerts ready'}
+        </span>
+      </footer>
 
       <nav className="bottom-nav" aria-label="Mobile navigation">{navItems.map(({ route: itemRoute, label, icon: Icon }) => <button key={itemRoute} className={route === itemRoute ? 'active' : ''} onClick={() => navigate(itemRoute)}><Icon size={19} /><span>{label}</span></button>)}</nav>
 
       {activeAlert && <AlertModal alert={activeAlert} onClose={() => setActiveAlert(null)} onShare={shareAlert} shared={shared} navigate={navigate} />}
+      {notificationPermission !== 'granted' && notificationPermission !== 'unsupported' && (
+        <div className="notification-banner">
+          <div>
+            <strong>Enable alerts</strong>
+            <span>Turn on browser notifications for emergency updates.</span>
+          </div>
+          <button className="button primary" onClick={enableNotifications}>Allow</button>
+        </div>
+      )}
       {isSignInOpen && <CommunitySignInModal onClose={() => setIsSignInOpen(false)} onSignIn={signInToCommunity} />}
     </div>
   )
@@ -309,7 +445,7 @@ function MapPreview({ parish, dataSaver }: { parish: string; dataSaver: boolean 
 
     {!shouldUseFallback && (
       <div className="map-hazard-layer" aria-label={`Hazard overlays for ${parish}`}>
-        {hazards.map((hazard) => {
+        {hazards.map((hazard: { id: string; center: { lat: number; lng: number }; level: string; label: string }) => {
           const left = 50 + ((hazard.center.lng - coordinates.lng) / 0.34) * 100
           const top = 50 + ((hazard.center.lat - coordinates.lat) / 0.28) * 100
           const levelClass = hazard.level === 'critical' ? 'critical' : hazard.level === 'high' ? 'high' : hazard.level === 'moderate' ? 'moderate' : 'low'
@@ -460,12 +596,15 @@ function CommunitySignInModal({ onClose, onSignIn }: { onClose: () => void; onSi
   return <div className="composer-backdrop" role="presentation" onClick={onClose}><form className="signin-modal" onSubmit={submit} onClick={(event) => event.stopPropagation()}><div className="composer-heading"><div><p className="eyebrow">Community access</p><h2>Sign in to read and share stories</h2></div><button type="button" className="icon-button" onClick={onClose} aria-label="Close sign in"><X size={19} /></button></div><p className="composer-copy">Tell us where you are from so community stories can stay connected to the parish they came from.</p><label>Username<input required value={username} onChange={(event) => setUsername(event.target.value)} autoComplete="username" /></label><label>Email address<input required type="email" value={email} onChange={(event) => setEmail(event.target.value)} autoComplete="email" /></label><label>Password<input required type="password" value={password} onChange={(event) => setPassword(event.target.value)} autoComplete="current-password" /></label><label>Your parish<select value={parish} onChange={(event) => setParish(event.target.value)}>{parishes.map((option) => <option key={option}>{option}</option>)}</select></label><button type="submit" className="button primary signin-submit"><MessageCircle size={17} /> Continue to Community</button><small className="form-note">Prototype sign-in: your password is only used to validate this form and is not saved.</small></form></div>
 }
 
-function SupportPage() {
+function SupportPage({ sendTestAlert }: { sendTestAlert: (title: string, body: string) => Promise<boolean> }) {
   const [volunteerSubmitted, setVolunteerSubmitted] = useState(false)
   const [donationSubmitted, setDonationSubmitted] = useState(false)
   const [amount, setAmount] = useState('5000')
   const [frequency, setFrequency] = useState('One-time')
   const [paymentMethod, setPaymentMethod] = useState('Card')
+  const [pushTitle, setPushTitle] = useState('Flash flood warning')
+  const [pushBody, setPushBody] = useState('Heavy rain is expected across St. Andrew and Kingston. Move to higher ground if instructed.')
+  const [pushSubmitted, setPushSubmitted] = useState(false)
   const disasterOptions = ['Any emergency', 'Hurricane cleanup', 'Flood recovery', 'Earthquake response', 'Landslide cleanup', 'Community support']
   const parishes = ['Kingston & St. Andrew', 'St. Catherine', 'Clarendon', 'Manchester', 'St. Elizabeth', 'Portland', 'St. Thomas']
   const donationFunds = ['General Emergency Fund', 'Hurricane recovery', 'Medical supplies drive', 'Shelter and food support']
@@ -480,7 +619,13 @@ function SupportPage() {
     setDonationSubmitted(true)
   }
 
-  return <PageIntro eyebrow="Support and relief" title="Volunteer & donate" copy="Give your time or support trusted relief efforts across Jamaica." action={<span className="source-badge"><ShieldCheck size={15} /> Prototype forms</span>}><div className="needs-callout"><div><p className="eyebrow">Current needs</p><h2>Small acts make response stronger.</h2></div><ul><li>Medical professionals in St. Thomas and Portland</li><li>Potable water and essential supplies</li><li>Heavy-duty transport for cleanup efforts</li></ul></div><div className="support-grid"><section className="support-panel"><div className="support-heading"><HeartPulse size={22} /><div><p className="eyebrow">Lend a hand</p><h2>Become a volunteer</h2></div></div>{volunteerSubmitted ? <Confirmation title="Volunteer registration received" copy="Thank you. A local response coordinator will follow up using your email." onReset={() => setVolunteerSubmitted(false)} /> : <form className="support-form" onSubmit={submitVolunteer}><label>Full name<input required placeholder="Jane Doe" /></label><label>Email address<input required type="email" placeholder="jane@example.com" /></label><label>Parish or area<select required>{parishes.map((option) => <option key={option}>{option}</option>)}</select></label><label>How would you like to help?<select required>{disasterOptions.map((option) => <option key={option}>{option}</option>)}</select></label><button className="button primary" type="submit"><HeartPulse size={17} /> Register as volunteer</button></form>}</section><section className="support-panel donation-panel"><div className="support-heading"><CreditCard size={22} /><div><p className="eyebrow">Give securely</p><h2>Make a donation</h2></div></div>{donationSubmitted ? <Confirmation title="Donation details received" copy={`Your ${frequency.toLowerCase()} gift of JMD $${Number(amount || 0).toLocaleString()} is ready for secure processing.`} onReset={() => setDonationSubmitted(false)} /> : <form className="support-form" onSubmit={submitDonation}><label>Donate to<select required>{donationFunds.map((option) => <option key={option}>{option}</option>)}</select></label><fieldset><legend>Amount (JMD)</legend><div className="amount-options">{['1000', '5000', '10000'].map((option) => <button key={option} type="button" className={amount === option ? 'amount-option selected' : 'amount-option'} onClick={() => setAmount(option)}>JMD ${Number(option).toLocaleString()}</button>)}</div><input aria-label="Custom donation amount" type="number" min="1" placeholder="Other amount" value={['1000', '5000', '10000'].includes(amount) ? '' : amount} onChange={(event) => setAmount(event.target.value)} /></fieldset><fieldset><legend>Frequency</legend><div className="radio-options"><label><input type="radio" name="frequency" value="One-time" checked={frequency === 'One-time'} onChange={(event) => setFrequency(event.target.value)} /> One-time</label><label><input type="radio" name="frequency" value="Monthly" checked={frequency === 'Monthly'} onChange={(event) => setFrequency(event.target.value)} /> Monthly</label></div></fieldset><label>Payment method<select value={paymentMethod} onChange={(event) => setPaymentMethod(event.target.value)}><option>Card</option><option>Bank transfer</option><option>Mobile money</option></select></label>{paymentMethod === 'Card' && <div className="payment-fields"><label>Card number<input required placeholder="0000 0000 0000 0000" inputMode="numeric" /></label><div className="form-grid"><label>Expiry<input required placeholder="MM/YY" /></label><label>CVV<input required placeholder="123" inputMode="numeric" /></label></div></div>}<button className="button primary" type="submit"><CreditCard size={17} /> Continue to secure donation</button><small className="form-note"><Smartphone size={13} /> This prototype does not process or store payments.</small></form>}</section></div></PageIntro>
+  const submitTestPush = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+    const ok = await sendTestAlert(pushTitle, pushBody)
+    setPushSubmitted(ok)
+  }
+
+  return <PageIntro eyebrow="Support and relief" title="Volunteer & donate" copy="Give your time or support trusted relief efforts across Jamaica." action={<span className="source-badge"><ShieldCheck size={15} /> Prototype forms</span>}><div className="needs-callout"><div><p className="eyebrow">Current needs</p><h2>Small acts make response stronger.</h2></div><ul><li>Medical professionals in St. Thomas and Portland</li><li>Potable water and essential supplies</li><li>Heavy-duty transport for cleanup efforts</li></ul></div><div className="support-grid"><section className="support-panel"><div className="support-heading"><HeartPulse size={22} /><div><p className="eyebrow">Lend a hand</p><h2>Become a volunteer</h2></div></div>{volunteerSubmitted ? <Confirmation title="Volunteer registration received" copy="Thank you. A local response coordinator will follow up using your email." onReset={() => setVolunteerSubmitted(false)} /> : <form className="support-form" onSubmit={submitVolunteer}><label>Full name<input required placeholder="Jane Doe" /></label><label>Email address<input required type="email" placeholder="jane@example.com" /></label><label>Parish or area<select required>{parishes.map((option) => <option key={option}>{option}</option>)}</select></label><label>How would you like to help?<select required>{disasterOptions.map((option) => <option key={option}>{option}</option>)}</select></label><button className="button primary" type="submit"><HeartPulse size={17} /> Register as volunteer</button></form>}</section><section className="support-panel donation-panel"><div className="support-heading"><CreditCard size={22} /><div><p className="eyebrow">Give securely</p><h2>Make a donation</h2></div></div>{donationSubmitted ? <Confirmation title="Donation details received" copy={`Your ${frequency.toLowerCase()} gift of JMD $${Number(amount || 0).toLocaleString()} is ready for secure processing.`} onReset={() => setDonationSubmitted(false)} /> : <form className="support-form" onSubmit={submitDonation}><label>Donation fund<select required>{donationFunds.map((option) => <option key={option}>{option}</option>)}</select></label><fieldset><legend>Amount</legend><div className="amount-options">{['5000', '10000', '25000'].map((value) => <button type="button" key={value} className={amount === value ? 'amount-option selected' : 'amount-option'} onClick={() => setAmount(value)}>JMD {Number(value).toLocaleString()}</button>)}</div></fieldset><label>Frequency<select value={frequency} onChange={(event) => setFrequency(event.target.value)}>{['One-time', 'Monthly', 'Quarterly'].map((option) => <option key={option}>{option}</option>)}</select></label><label>Payment method<select value={paymentMethod} onChange={(event) => setPaymentMethod(event.target.value)}>{['Card', 'Bank transfer', 'Mobile wallet'].map((option) => <option key={option}>{option}</option>)}</select></label><button className="button primary" type="submit"><CreditCard size={17} /> Continue to donation</button></form>}</section></div><section className="support-panel donation-panel" style={{ maxWidth: 860, marginTop: 20 }}><div className="support-heading"><Bell size={22} /><div><p className="eyebrow">System test</p><h2>Send a test push</h2></div></div>{pushSubmitted ? <Confirmation title="Push alert queued" copy="The backend has been asked to push this alert to all registered devices." onReset={() => setPushSubmitted(false)} /> : <form className="support-form" onSubmit={submitTestPush}><label>Alert title<input required value={pushTitle} onChange={(event) => setPushTitle(event.target.value)} placeholder="Flash flood warning" /></label><label>Alert body<textarea required rows={4} value={pushBody} onChange={(event) => setPushBody(event.target.value)} placeholder="Enter an emergency message for subscribed users." /></label><button className="button primary" type="submit"><Bell size={17} /> Send test alert</button></form>}</section></PageIntro>
 }
 
 function Confirmation({ title, copy, onReset }: { title: string; copy: string; onReset: () => void }) {

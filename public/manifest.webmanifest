@@ -1,0 +1,16 @@
+{
+  "name": "Watch Out JA",
+  "short_name": "WatchOutJA",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0e0e0e",
+  "theme_color": "#0e0e0e",
+  "description": "Emergency alerts and preparedness information for Jamaica.",
+  "icons": [
+    {
+      "src": "/favicon.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    }
+  ]
+}
