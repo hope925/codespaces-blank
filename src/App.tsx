@@ -54,6 +54,10 @@ type AlertFilter = 'all' | 'active' | 'flooding' | 'wind'
 type DisasterType = 'Hurricane' | 'Earthquake' | 'Flood' | 'Landslide'
 type StoryFocus = 'Survivor experience' | 'Recovery' | 'Rebuilding efforts'
 type PrepPhase = 'Before' | 'During' | 'After'
+type ShelterStatus = 'Open' | 'At capacity' | 'Closed'
+type ShelterType = 'School' | 'Community center' | 'Sports facility' | 'Government building'
+
+type Shelter = { id: string; name: string; parish: string; type: ShelterType; address: string; coordinates: { lat: number; lng: number }; status: ShelterStatus; totalCapacity: number; currentOccupancy: number; features: string[]; phone: string; evacuationRoutes: string[]; lastUpdated: number }
 
 type Alert = {
   id: string
@@ -104,10 +108,12 @@ const checklistItems = [
   'Keep IDs and important documents waterproofed',
 ]
 
-const shelters = [
-  { name: 'St. Jago High School', parish: 'St. Catherine', status: 'Open', capacity: '120 spaces', features: 'Accessible · Medical support' },
-  { name: 'Mona High School', parish: 'St. Andrew', status: 'Open', capacity: '80 spaces', features: 'Medical support' },
-  { name: 'National Arena', parish: 'Kingston', status: 'At capacity', capacity: 'No spaces', features: 'Accessible · Pet-friendly' },
+const shelters: Shelter[] = [
+  { id: 'st-jago', name: 'St. Jago High School', parish: 'St. Catherine', type: 'School', address: 'Spanish Town, St. Catherine', coordinates: { lat: 18.0179, lng: -76.8149 }, status: 'Open', totalCapacity: 120, currentOccupancy: 45, features: ['Accessible', 'Medical support', 'Kitchen', 'Water'], phone: '(876) 984-2341', evacuationRoutes: ['Main: via Spanish Town Road', 'Secondary: via Caymanas Estate Road', 'Emergency: by bridge to Mona'], lastUpdated: Date.now() },
+  { id: 'mona-high', name: 'Mona High School', parish: 'St. Andrew', type: 'School', address: 'Mona, Kingston', coordinates: { lat: 18.0063, lng: -76.8043 }, status: 'Open', totalCapacity: 80, currentOccupancy: 28, features: ['Medical support', 'Kitchen', 'Parking'], phone: '(876) 927-3456', evacuationRoutes: ['Main: via Hope Road', 'Secondary: via Old Hope Road'], lastUpdated: Date.now() },
+  { id: 'national-arena', name: 'National Arena', parish: 'Kingston', type: 'Sports facility', address: 'Stadium Lane, Kingston', coordinates: { lat: 18.0099, lng: -76.8242 }, status: 'At capacity', totalCapacity: 500, currentOccupancy: 500, features: ['Accessible', 'Pet-friendly', 'Medical support', 'Kitchen'], phone: '(876) 929-4411', evacuationRoutes: ['Main: via Windward Road', 'Secondary: via Harbour Street'], lastUpdated: Date.now() },
+  { id: 'jamaica-college', name: 'Jamaica College Gymnasium', parish: 'Kingston', type: 'School', address: 'Hope Road, Kingston', coordinates: { lat: 18.0029, lng: -76.8047 }, status: 'Open', totalCapacity: 200, currentOccupancy: 62, features: ['Accessible', 'Medical support', 'Kitchen', 'Water', 'Generator'], phone: '(876) 929-0150', evacuationRoutes: ['Main: via Hope Road', 'Secondary: via Lady Musgrave Road'], lastUpdated: Date.now() },
+  { id: 'portmore-high', name: 'Portmore High School', parish: 'St. Catherine', type: 'School', address: 'Portmore, St. Catherine', coordinates: { lat: 17.9783, lng: -76.8374 }, status: 'Open', totalCapacity: 150, currentOccupancy: 31, features: ['Accessible', 'Kitchen', 'Water'], phone: '(876) 905-5234', evacuationRoutes: ['Main: via Portmore Parkway', 'Secondary: via Washington Boulevard'], lastUpdated: Date.now() },
 ]
 
 type MedicalFacility = { id: string; name: string; parish: string; type: string; phone: string; address: string }
@@ -128,12 +134,12 @@ const disasterHistory: { year: number; type: DisasterType; title: string; severi
   { year: 2024, type: 'Hurricane', title: 'Hurricane Beryl', severity: 'Category 4', date: 'July 3, 2024', areas: 'Southern and eastern parishes', summary: 'Strong winds, heavy rain, and coastal impacts affected communities as Beryl passed south of Jamaica.' },
 ]
 
-type Story = { id: string; type: DisasterType; focus: StoryFocus; parish: string; date: string; title: string; quote: string; author: string }
+type Story = { id: string; type: DisasterType; focus: StoryFocus; parish: string; date: string; title: string; quote: string; author: string; lessonsLearned?: string; mediaUrl?: string; isAnonymous: boolean; status: 'pending' | 'approved' | 'rejected'; submittedAt: number }
 
 const communityStories: Story[] = [
-  { id: 'gilbert-rebuilding', type: 'Hurricane', focus: 'Rebuilding efforts', parish: 'St. Thomas', date: 'September 12, 1988', title: 'Rebuilding after Gilbert', quote: 'We lost the roof within the first few hours, but the community came together faster than the winds died down. Sharing supplies and shelter helped us through the hardest week of our lives.', author: 'Community member' },
-  { id: 'portland-floods', type: 'Flood', focus: 'Survivor experience', parish: 'Portland', date: 'November 5, 2021', title: 'High waters, higher spirits', quote: 'The river breached its banks just before midnight. Thanks to the early warning alerts, we moved the elders to higher ground. We lost property, but we kept what mattered most.', author: 'Community member' },
-  { id: 'kingston-earthquake', type: 'Earthquake', focus: 'Recovery', parish: 'Kingston', date: 'January 2020', title: 'Checking on every neighbour', quote: 'The first thing we did was check on the people living alone. That simple plan helped us account for everyone before we started clearing the road.', author: 'Community member' },
+  { id: 'gilbert-rebuilding', type: 'Hurricane', focus: 'Rebuilding efforts', parish: 'St. Thomas', date: 'September 12, 1988', title: 'Rebuilding after Gilbert', quote: 'We lost the roof within the first few hours, but the community came together faster than the winds died down. Sharing supplies and shelter helped us through the hardest week of our lives.', author: 'Community member', isAnonymous: false, status: 'approved', submittedAt: Date.now(), lessonsLearned: 'Community coordination saved lives. A simple neighborhood check-in system is more powerful than any emergency service.' },
+  { id: 'portland-floods', type: 'Flood', focus: 'Survivor experience', parish: 'Portland', date: 'November 5, 2021', title: 'High waters, higher spirits', quote: 'The river breached its banks just before midnight. Thanks to the early warning alerts, we moved the elders to higher ground. We lost property, but we kept what mattered most.', author: 'Community member', isAnonymous: false, status: 'approved', submittedAt: Date.now(), lessonsLearned: 'Early warnings give crucial minutes. Identify high-risk neighbors beforehand so you can reach out quickly.' },
+  { id: 'kingston-earthquake', type: 'Earthquake', focus: 'Recovery', parish: 'Kingston', date: 'January 2020', title: 'Checking on every neighbour', quote: 'The first thing we did was check on the people living alone. That simple plan helped us account for everyone before we started clearing the road.', author: 'Community member', isAnonymous: false, status: 'approved', submittedAt: Date.now(), lessonsLearned: 'Being organized before a disaster means you can act immediately after. Prepare a simple list of vulnerable residents.' },
 ]
 
 const navItems: { route: Route; label: string; icon: typeof House }[] = [
@@ -526,7 +532,178 @@ function PreparednessPage({ checked, toggleChecklist }: { checked: string[]; tog
 function Guidance({ icon, title, copy, accent }: { icon: React.ReactNode; title: string; copy: string; accent: string }) { return <article className={`guidance ${accent}`}><span>{icon}</span><h3>{title}</h3><p>{copy}</p></article> }
 
 function SheltersPage({ parish }: { parish: string }) {
-  return <PageIntro eyebrow="A safe place nearby" title="Shelters" copy={`Designated safe zones near ${parish}. Status can change during an active event.`} action={<span className="source-badge"><MapPin size={15} /> Map & list view</span>}><div className="shelter-layout"><div className="shelter-map"><span className="map-water-label">JAMAICA</span><div className="island-shape"><span className="shelter-marker sm-one"><House size={14} /></span><span className="shelter-marker sm-two"><House size={14} /></span><span className="shelter-marker sm-three"><House size={14} /></span></div></div><div className="shelter-list">{shelters.map((shelter) => <article className="shelter-card" key={shelter.name}><div className={`shelter-status ${shelter.status === 'Open' ? 'open' : 'full'}`}><span />{shelter.status}</div><h3>{shelter.name}</h3><p><MapPin size={15} />{shelter.parish}</p><div className="shelter-details"><span>{shelter.capacity}</span><span>{shelter.features}</span></div><button className="text-button">Directions <ExternalLink size={14} /></button></article>)}</div></div></PageIntro>
+  const [filterType, setFilterType] = useState<'All' | ShelterType>('All')
+  const [showOpenOnly, setShowOpenOnly] = useState(false)
+  const [selectedShelter, setSelectedShelter] = useState<Shelter | null>(null)
+  const [shelterList, setShelterList] = useState(shelters)
+  const [shelterCapacities, setShelterCapacities] = useState<Record<string, { current: number; lastUpdate: number }>>({})
+
+  useEffect(() => {
+    const loadShelterData = async () => {
+      try {
+        const response = await fetch('/api/shelters')
+        const data = await response.json()
+        setShelterList(data.shelters || shelters)
+        setShelterCapacities(data.capacities || {})
+      } catch {
+        setShelterList(shelters)
+      }
+    }
+    loadShelterData()
+    const interval = setInterval(loadShelterData, 30000)
+    return () => clearInterval(interval)
+  }, [])
+
+  const shelterTypes: ShelterType[] = ['School', 'Community center', 'Sports facility', 'Government building']
+  const visibleShelters = shelterList.filter((s) => (filterType === 'All' || s.type === filterType) && (!showOpenOnly || s.status === 'Open') && (s.parish === parish || parish === 'All parishes'))
+
+  const handleUpdateCapacity = async (shelterId: string, newOccupancy: number) => {
+    try {
+      await fetch(`/api/shelters/${shelterId}/occupancy`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ occupancy: newOccupancy }),
+      })
+      setShelterList((current) => current.map((s) => s.id === shelterId ? { ...s, currentOccupancy: newOccupancy, lastUpdated: Date.now() } : s))
+    } catch (err) {
+      console.error('Failed to update occupancy')
+    }
+  }
+
+  return <PageIntro eyebrow="A safe place nearby" title="Shelters" copy={`Designated safe zones${parish !== 'All parishes' ? ` near ${parish}` : ''}. Real-time capacity and evacuation routes.`} action={<span className="source-badge"><MapPin size={15} /> Live updates</span>}>
+    <div style={{ display: 'flex', gap: '12px', marginBottom: '20px', flexWrap: 'wrap' }}>
+      <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+        <label style={{ fontSize: '0.9em', fontWeight: '600' }}>Type:</label>
+        <div style={{ display: 'flex', gap: '8px' }}>
+          {(['All', ...shelterTypes] as ('All' | ShelterType)[]).map((type) => (
+            <button key={type} onClick={() => setFilterType(type)} style={{ padding: '6px 12px', border: filterType === type ? '2px solid #2196f3' : '1px solid #e5e5e5', borderRadius: '4px', backgroundColor: filterType === type ? '#e3f2fd' : '#fff', cursor: 'pointer', fontSize: '0.85em' }}>{type}</button>
+          ))}
+        </div>
+      </div>
+      <label style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.9em' }}>
+        <input type="checkbox" checked={showOpenOnly} onChange={(e) => setShowOpenOnly(e.target.checked)} />
+        <span>Open shelters only</span>
+      </label>
+    </div>
+
+    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', minHeight: '400px' }}>
+      <div style={{ overflowY: 'auto', borderRight: '1px solid #e5e5e5', paddingRight: '16px' }}>
+        {visibleShelters.map((shelter) => (
+          <button
+            key={shelter.id}
+            onClick={() => setSelectedShelter(shelter)}
+            style={{
+              width: '100%',
+              padding: '12px',
+              marginBottom: '12px',
+              border: selectedShelter?.id === shelter.id ? '2px solid #4caf50' : '1px solid #e5e5e5',
+              borderRadius: '6px',
+              backgroundColor: selectedShelter?.id === shelter.id ? '#e8f5e9' : '#fff',
+              cursor: 'pointer',
+              textAlign: 'left',
+              transition: 'all 0.2s',
+            }}
+          >
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start', marginBottom: '6px' }}>
+              <div>
+                <div style={{ fontWeight: '600' }}>{shelter.name}</div>
+                <div style={{ fontSize: '0.85em', color: '#666' }}>{shelter.type}</div>
+              </div>
+              <span style={{
+                padding: '4px 8px',
+                borderRadius: '4px',
+                fontSize: '0.8em',
+                fontWeight: '600',
+                backgroundColor: shelter.status === 'Open' ? '#c8e6c9' : shelter.status === 'At capacity' ? '#ffccbc' : '#f5f5f5',
+                color: shelter.status === 'Open' ? '#2e7d32' : shelter.status === 'At capacity' ? '#e64a19' : '#666',
+              }}>
+                {shelter.status}
+              </span>
+            </div>
+            <div style={{ fontSize: '0.85em', color: '#666', marginBottom: '4px' }}>
+              {shelter.currentOccupancy}/{shelter.totalCapacity} people
+            </div>
+            <div style={{ width: '100%', height: '6px', backgroundColor: '#e5e5e5', borderRadius: '3px', overflow: 'hidden' }}>
+              <div style={{ height: '100%', backgroundColor: shelter.currentOccupancy >= shelter.totalCapacity * 0.9 ? '#f44336' : shelter.currentOccupancy >= shelter.totalCapacity * 0.7 ? '#ff9800' : '#4caf50', width: `${Math.min((shelter.currentOccupancy / shelter.totalCapacity) * 100, 100)}%` }} />
+            </div>
+          </button>
+        ))}
+        {visibleShelters.length === 0 && <div style={{ padding: '20px', textAlign: 'center', color: '#999' }}>No shelters match your filters</div>}
+      </div>
+
+      <div style={{ paddingLeft: '16px' }}>
+        {selectedShelter ? (
+          <>
+            <div style={{ marginBottom: '20px' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start', marginBottom: '12px' }}>
+                <div>
+                  <h3 style={{ marginBottom: '4px' }}>{selectedShelter.name}</h3>
+                  <p style={{ fontSize: '0.9em', color: '#666', marginBottom: '12px' }}>
+                    <MapPin size={16} style={{ marginRight: '4px', display: 'inline' }} />
+                    {selectedShelter.address}
+                  </p>
+                </div>
+                <span style={{
+                  padding: '6px 12px',
+                  borderRadius: '4px',
+                  fontSize: '0.85em',
+                  fontWeight: '600',
+                  backgroundColor: selectedShelter.status === 'Open' ? '#c8e6c9' : '#ffccbc',
+                  color: selectedShelter.status === 'Open' ? '#2e7d32' : '#e64a19',
+                }}>
+                  {selectedShelter.status}
+                </span>
+              </div>
+
+              <div style={{ marginBottom: '16px' }}>
+                <p style={{ fontSize: '0.85em', fontWeight: '600', marginBottom: '4px' }}>Capacity</p>
+                <div style={{ fontSize: '1.2em', fontWeight: '600', marginBottom: '8px' }}>{selectedShelter.currentOccupancy}/{selectedShelter.totalCapacity} people</div>
+                <div style={{ width: '100%', height: '8px', backgroundColor: '#e5e5e5', borderRadius: '4px', overflow: 'hidden' }}>
+                  <div style={{ height: '100%', backgroundColor: selectedShelter.currentOccupancy >= selectedShelter.totalCapacity * 0.9 ? '#f44336' : selectedShelter.currentOccupancy >= selectedShelter.totalCapacity * 0.7 ? '#ff9800' : '#4caf50', width: `${Math.min((selectedShelter.currentOccupancy / selectedShelter.totalCapacity) * 100, 100)}%` }} />
+                </div>
+              </div>
+
+              <div style={{ marginBottom: '16px' }}>
+                <p style={{ fontSize: '0.85em', fontWeight: '600', marginBottom: '8px' }}>Amenities</p>
+                <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
+                  {selectedShelter.features.map((feature) => (
+                    <span key={feature} style={{ padding: '4px 8px', backgroundColor: '#e8eaf6', borderRadius: '4px', fontSize: '0.8em' }}>{feature}</span>
+                  ))}
+                </div>
+              </div>
+
+              <div style={{ marginBottom: '16px' }}>
+                <p style={{ fontSize: '0.85em', fontWeight: '600', marginBottom: '8px' }}>Evacuation Routes</p>
+                <ul style={{ fontSize: '0.85em', lineHeight: 1.6, marginLeft: '16px', color: '#666' }}>
+                  {selectedShelter.evacuationRoutes.map((route, idx) => <li key={idx}>{route}</li>)}
+                </ul>
+              </div>
+
+              <div style={{ display: 'flex', gap: '8px', marginTop: '20px' }}>
+                <a href={`tel:${selectedShelter.phone.replace(/\D/g, '')}`} className="button secondary" style={{ flex: 1, textDecoration: 'none', textAlign: 'center', padding: '10px', borderRadius: '4px', cursor: 'pointer' }}>
+                  <Phone size={16} style={{ marginRight: '4px', display: 'inline' }} /> Call
+                </a>
+                <a href={`https://www.google.com/maps/search/${encodeURIComponent(selectedShelter.address)}`} target="_blank" rel="noopener noreferrer" className="button primary" style={{ flex: 1, textDecoration: 'none', textAlign: 'center', padding: '10px', borderRadius: '4px', cursor: 'pointer' }}>
+                  <Navigation size={16} style={{ marginRight: '4px', display: 'inline' }} /> Directions
+                </a>
+              </div>
+
+              <div style={{ marginTop: '12px', fontSize: '0.75em', color: '#999' }}>
+                Last updated: {new Date(selectedShelter.lastUpdated).toLocaleTimeString()}
+              </div>
+            </div>
+          </>
+        ) : (
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%', color: '#999' }}>
+            <div style={{ textAlign: 'center' }}>
+              <House size={40} style={{ marginBottom: '12px', opacity: 0.5 }} />
+              <p>Select a shelter to see details</p>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  </PageIntro>
 }
 
 function ContactsPage() {
@@ -553,32 +730,96 @@ function DisasterEvent({ event }: { event: (typeof disasterHistory)[number] }) {
 
 function CommunityPage({ user }: { user: { username: string; email: string; parish: string } }) {
   const [stories, setStories] = useState(communityStories)
+  const [pendingCount, setPendingCount] = useState(0)
   const [type, setType] = useState<'All' | DisasterType>('All')
   const [focus, setFocus] = useState<'All' | StoryFocus>('All')
   const [isComposerOpen, setIsComposerOpen] = useState(false)
+  const [isModerationOpen, setIsModerationOpen] = useState(false)
   const [storyTitle, setStoryTitle] = useState('')
   const [storyQuote, setStoryQuote] = useState('')
   const [storyType, setStoryType] = useState<DisasterType>('Hurricane')
   const [storyFocus, setStoryFocus] = useState<StoryFocus>('Survivor experience')
+  const [lessonsLearned, setLessonsLearned] = useState('')
+  const [isAnonymous, setIsAnonymous] = useState(false)
+  const [mediaUrl, setMediaUrl] = useState('')
   const disasterTypes: DisasterType[] = ['Hurricane', 'Earthquake', 'Flood', 'Landslide']
   const focuses: StoryFocus[] = ['Survivor experience', 'Recovery', 'Rebuilding efforts']
-  const visibleStories = stories.filter((story) => (type === 'All' || story.type === type) && (focus === 'All' || story.focus === focus))
+  const visibleStories = stories.filter((story) => story.status === 'approved' && (type === 'All' || story.type === type) && (focus === 'All' || story.focus === focus))
 
-  const publishStory = (event: React.FormEvent<HTMLFormElement>) => {
+  useEffect(() => {
+    const loadStories = async () => {
+      try {
+        const response = await fetch('/api/stories')
+        const data = await response.json()
+        setStories(data.stories || communityStories)
+        setPendingCount(data.pendingCount || 0)
+      } catch {
+        setStories(communityStories)
+      }
+    }
+    loadStories()
+  }, [])
+
+  const publishStory = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
-    setStories((current) => [{ id: `story-${Date.now()}`, type: storyType, focus: storyFocus, parish: user.parish, date: 'Today', title: storyTitle, quote: storyQuote, author: user.username }, ...current])
-    setStoryTitle('')
-    setStoryQuote('')
-    setIsComposerOpen(false)
-    setType('All')
-    setFocus('All')
+    const newStory: Story = {
+      id: `story-${Date.now()}`,
+      type: storyType,
+      focus: storyFocus,
+      parish: user.parish,
+      date: 'Today',
+      title: storyTitle,
+      quote: storyQuote,
+      author: isAnonymous ? 'Anonymous' : user.username,
+      lessonsLearned: lessonsLearned || undefined,
+      mediaUrl: mediaUrl || undefined,
+      isAnonymous,
+      status: 'pending',
+      submittedAt: Date.now(),
+    }
+    
+    try {
+      const response = await fetch('/api/stories', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newStory),
+      })
+      if (response.ok) {
+        const result = await response.json()
+        setStories((current) => [result, ...current])
+        setPendingCount((c) => c + 1)
+        setStoryTitle('')
+        setStoryQuote('')
+        setLessonsLearned('')
+        setMediaUrl('')
+        setIsAnonymous(false)
+        setIsComposerOpen(false)
+      }
+    } catch (err) {
+      setStories((current) => [newStory, ...current])
+      setStoryTitle('')
+      setStoryQuote('')
+      setLessonsLearned('')
+      setMediaUrl('')
+      setIsAnonymous(false)
+      setIsComposerOpen(false)
+    }
   }
 
-  return <PageIntro eyebrow="From across Jamaica" title="Community stories" copy="Real accounts of survival, recovery, and rebuilding shared by people in our parishes." action={<button className="button primary" onClick={() => setIsComposerOpen(true)}><MessageCircle size={17} /> Share your story</button>}><div className="community-welcome"><div><span className="verified-label"><ShieldCheck size={15} /> Signed in as {user.username}</span><strong>Your voice can help someone prepare.</strong><span>Sharing your parish helps neighbours find relevant experiences.</span></div><span className="community-parish"><MapPin size={15} /> {user.parish}</span></div><div className="community-filters"><div className="filter-row" role="group" aria-label="Filter stories by disaster">{(['All', ...disasterTypes] as ('All' | DisasterType)[]).map((filter) => <button key={filter} className={type === filter ? 'filter active' : 'filter'} onClick={() => setType(filter)} aria-pressed={type === filter}>{filter === 'All' ? 'All stories' : filter}</button>)}</div><div className="filter-row" role="group" aria-label="Filter stories by focus">{(['All', ...focuses] as ('All' | StoryFocus)[]).map((filter) => <button key={filter} className={focus === filter ? 'filter active' : 'filter'} onClick={() => setFocus(filter)} aria-pressed={focus === filter}>{filter === 'All' ? 'All experiences' : filter}</button>)}</div></div><div className="story-grid">{visibleStories.map((story) => <article className="story-card" key={story.id}><div className={`story-banner ${story.type.toLowerCase()}`}><MessageCircle size={24} /><span>{story.type}</span></div><div className="story-card-content"><div className="story-meta"><span>{story.parish}</span><span>{story.date}</span></div><span className="story-focus">{story.focus}</span><h2>{story.title}</h2><p>“{story.quote}”</p><small>Shared by {story.author}</small></div></article>)}</div>{visibleStories.length === 0 && <div className="past-alert"><span className="past-icon"><Info size={17} /></span><div><strong>No stories match those filters</strong><span>Try another disaster or experience category.</span></div></div>}{isComposerOpen && <StoryComposer title={storyTitle} quote={storyQuote} type={storyType} focus={storyFocus} disasterTypes={disasterTypes} focuses={focuses} onTitleChange={setStoryTitle} onQuoteChange={setStoryQuote} onTypeChange={setStoryType} onFocusChange={setStoryFocus} onSubmit={publishStory} onClose={() => setIsComposerOpen(false)} />}</PageIntro>
+  return <>
+    <PageIntro eyebrow="From across Jamaica" title="Community stories" copy="Real accounts of survival, recovery, and rebuilding shared by people in our parishes." action={<div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}><button className="button primary" onClick={() => setIsComposerOpen(true)}><MessageCircle size={17} /> Share your story</button>{pendingCount > 0 && <button className="button secondary" onClick={() => setIsModerationOpen(true)}><ShieldCheck size={17} /> Review ({pendingCount})</button>}</div>}>
+      <div className="community-welcome"><div><span className="verified-label"><ShieldCheck size={15} /> Signed in as {user.username}</span><strong>Your voice can help someone prepare.</strong><span>Sharing your parish helps neighbours find relevant experiences.</span></div><span className="community-parish"><MapPin size={15} /> {user.parish}</span></div>
+      <div className="community-filters"><div className="filter-row" role="group" aria-label="Filter stories by disaster">{(['All', ...disasterTypes] as ('All' | DisasterType)[]).map((filter) => <button key={filter} className={type === filter ? 'filter active' : 'filter'} onClick={() => setType(filter)} aria-pressed={type === filter}>{filter === 'All' ? 'All stories' : filter}</button>)}</div><div className="filter-row" role="group" aria-label="Filter stories by focus">{(['All', ...focuses] as ('All' | StoryFocus)[]).map((filter) => <button key={filter} className={focus === filter ? 'filter active' : 'filter'} onClick={() => setFocus(filter)} aria-pressed={focus === filter}>{filter === 'All' ? 'All experiences' : filter}</button>)}</div></div>
+      <div className="story-grid">{visibleStories.map((story) => <article className="story-card" key={story.id}><div className={`story-banner ${story.type.toLowerCase()}`}><MessageCircle size={24} /><span>{story.type}</span></div><div className="story-card-content"><div className="story-meta"><span>{story.parish}</span><span>{story.date}</span></div><span className="story-focus">{story.focus}</span><h2>{story.title}</h2><p>"{story.quote}"</p>{story.lessonsLearned && <p style={{ fontSize: '0.9em', fontStyle: 'italic', marginTop: '0.5em', color: '#666' }}>💡 {story.lessonsLearned}</p>}<small>Shared by {story.author}{story.isAnonymous ? ' (anonymous)' : ''}</small></div></article>)}</div>
+      {visibleStories.length === 0 && <div className="past-alert"><span className="past-icon"><Info size={20} /></span><div><strong>No stories yet</strong><span>Be the first to share your experience and help your community prepare.</span></div></div>}
+    </PageIntro>
+    {isComposerOpen && <StoryComposer title={storyTitle} quote={storyQuote} type={storyType} focus={storyFocus} lessonsLearned={lessonsLearned} mediaUrl={mediaUrl} isAnonymous={isAnonymous} disasterTypes={disasterTypes} focuses={focuses} onTitleChange={setStoryTitle} onQuoteChange={setStoryQuote} onTypeChange={setStoryType} onFocusChange={setStoryFocus} onLessonsChange={setLessonsLearned} onMediaChange={setMediaUrl} onAnonymousChange={setIsAnonymous} onSubmit={publishStory} onClose={() => setIsComposerOpen(false)} />}
+    {isModerationOpen && <ModerationQueue stories={stories.filter((s) => s.status === 'pending')} onClose={() => setIsModerationOpen(false)} onApprove={(id) => { setStories((current) => current.map((s) => s.id === id ? { ...s, status: 'approved' as const } : s)); setPendingCount((c) => c - 1) }} onReject={(id) => { setStories((current) => current.map((s) => s.id === id ? { ...s, status: 'rejected' as const } : s)); setPendingCount((c) => c - 1) }} />}
+  </>
 }
 
-function StoryComposer({ title, quote, type, focus, disasterTypes, focuses, onTitleChange, onQuoteChange, onTypeChange, onFocusChange, onSubmit, onClose }: { title: string; quote: string; type: DisasterType; focus: StoryFocus; disasterTypes: DisasterType[]; focuses: StoryFocus[]; onTitleChange: (value: string) => void; onQuoteChange: (value: string) => void; onTypeChange: (value: DisasterType) => void; onFocusChange: (value: StoryFocus) => void; onSubmit: (event: React.FormEvent<HTMLFormElement>) => void; onClose: () => void }) {
-  return <div className="composer-backdrop" role="presentation" onClick={onClose}><form className="story-composer" onSubmit={onSubmit} onClick={(event) => event.stopPropagation()}><div className="composer-heading"><div><p className="eyebrow">Community contribution</p><h2>Share your story</h2></div><button type="button" className="icon-button" onClick={onClose} aria-label="Close story form"><X size={19} /></button></div><p className="composer-copy">Your experience may help another Jamaican know what to expect and how to prepare.</p><label>Story title<input required value={title} onChange={(event) => onTitleChange(event.target.value)} placeholder="Give your story a title" /></label><div className="form-grid"><label>Disaster type<select value={type} onChange={(event) => onTypeChange(event.target.value as DisasterType)}>{disasterTypes.map((option) => <option key={option}>{option}</option>)}</select></label><label>What is it about?<select value={focus} onChange={(event) => onFocusChange(event.target.value as StoryFocus)}>{focuses.map((option) => <option key={option}>{option}</option>)}</select></label></div><label>Your experience<textarea required value={quote} onChange={(event) => onQuoteChange(event.target.value)} placeholder="Tell the community what happened, how you coped, or how people rebuilt." rows={5} /></label><div className="composer-actions"><button type="button" className="button secondary" onClick={onClose}>Cancel</button><button type="submit" className="button primary"><MessageCircle size={17} /> Publish story</button></div></form></div>
+function StoryComposer({ title, quote, type, focus, lessonsLearned, mediaUrl, isAnonymous, disasterTypes, focuses, onTitleChange, onQuoteChange, onTypeChange, onFocusChange, onLessonsChange, onMediaChange, onAnonymousChange, onSubmit, onClose }: { title: string; quote: string; type: DisasterType; focus: StoryFocus; lessonsLearned: string; mediaUrl: string; isAnonymous: boolean; disasterTypes: DisasterType[]; focuses: StoryFocus[]; onTitleChange: (value: string) => void; onQuoteChange: (value: string) => void; onTypeChange: (value: DisasterType) => void; onFocusChange: (value: StoryFocus) => void; onLessonsChange: (value: string) => void; onMediaChange: (value: string) => void; onAnonymousChange: (value: boolean) => void; onSubmit: (event: React.FormEvent<HTMLFormElement>) => void; onClose: () => void }) {
+  return <div className="composer-backdrop" role="presentation" onClick={onClose}><form className="story-composer" onSubmit={onSubmit} onClick={(event) => event.stopPropagation()}><div className="composer-heading"><div><p className="eyebrow">Community contribution</p><h2>Share your story</h2></div><button type="button" className="icon-button" onClick={onClose} aria-label="Close story form"><X size={19} /></button></div><p className="composer-copy">Your experience may help another Jamaican know what to expect and how to prepare. All stories are reviewed before appearing publicly.</p><label>Story title<input required value={title} onChange={(event) => onTitleChange(event.target.value)} placeholder="Give your story a title" /></label><div className="form-grid"><label>Disaster type<select value={type} onChange={(event) => onTypeChange(event.target.value as DisasterType)}>{disasterTypes.map((option) => <option key={option}>{option}</option>)}</select></label><label>What is it about?<select value={focus} onChange={(event) => onFocusChange(event.target.value as StoryFocus)}>{focuses.map((option) => <option key={option}>{option}</option>)}</select></label></div><label>Your experience<textarea required value={quote} onChange={(event) => onQuoteChange(event.target.value)} placeholder="Tell the community what happened, how you coped, or how people rebuilt." rows={5} /></label><label>Lessons learned<textarea value={lessonsLearned} onChange={(event) => onLessonsChange(event.target.value)} placeholder="What did you learn? What would you do differently? What helped?" rows={3} /></label><label>Media URL (optional)<input type="url" value={mediaUrl} onChange={(event) => onMediaChange(event.target.value)} placeholder="https://example.com/image.jpg" /></label><label className="checkbox-label"><input type="checkbox" checked={isAnonymous} onChange={(event) => onAnonymousChange(event.target.checked)} /> Post anonymously</label><div className="composer-actions"><button type="button" className="button secondary" onClick={onClose}>Cancel</button><button type="submit" className="button primary"><MessageCircle size={17} /> Submit for review</button></div></form></div>
 }
 
 function CommunitySignInModal({ onClose, onSignIn }: { onClose: () => void; onSignIn: (user: { username: string; email: string; parish: string }) => void }) {
@@ -653,6 +894,80 @@ function PageIntro({ eyebrow, title, copy, action, children }: { eyebrow: string
 
 function AlertModal({ alert, onClose, onShare, shared, navigate }: { alert: Alert; onClose: () => void; onShare: (alert: Alert) => void; shared: boolean; navigate: (route: Route) => void }) {
   return <div className="modal-backdrop" role="presentation" onClick={onClose}><article className="alert-modal" role="dialog" aria-modal="true" aria-labelledby="alert-title" onClick={(event) => event.stopPropagation()}><div className={`modal-severity ${alert.severity}`}><span><AlertTriangle size={18} /> {alert.label}</span><button onClick={onClose} aria-label="Close alert"><X size={20} /></button></div><div className="modal-content"><span className="verified-label"><ShieldCheck size={15} /> Verified alert · Simulated source</span><h2 id="alert-title">{alert.title}</h2><p className="modal-summary">{alert.summary}</p><div className="action-box"><p className="eyebrow">What to do now</p><strong>{alert.action}</strong></div><dl className="alert-facts"><div><dt>Affected areas</dt><dd>{alert.parishes.join(', ')}</dd></div><div><dt>Issued</dt><dd>{alert.issued}</dd></div><div><dt>Expires</dt><dd>{alert.expires}</dd></div></dl><div className="modal-actions"><button className="button primary" onClick={() => onShare(alert)}><Share2 size={17} /> {shared ? 'Copied to clipboard' : 'Share alert'}</button><button className="button secondary" onClick={() => { onClose(); navigate('preparedness') }}>Check preparedness <ArrowRight size={17} /></button></div></div></article></div>
+}
+
+function ModerationQueue({ stories, onClose, onApprove, onReject }: { stories: Story[]; onClose: () => void; onApprove: (id: string) => void; onReject: (id: string) => void }) {
+  const [selectedStory, setSelectedStory] = useState<Story | null>(stories.length > 0 ? stories[0] : null)
+  
+  return <div className="modal-backdrop" role="presentation" onClick={onClose}>
+    <div style={{ position: 'fixed', inset: 0, display: 'flex', flexDirection: 'column', backgroundColor: '#fff', maxWidth: '900px', width: '95%', height: '95%', margin: 'auto', borderRadius: '8px', boxShadow: '0 10px 40px rgba(0,0,0,0.2)', overflow: 'hidden', zIndex: 50 }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid #e5e5e5', padding: '20px', backgroundColor: '#f9f9f9' }}>
+        <div>
+          <p style={{ fontSize: '0.85em', color: '#666', marginBottom: '4px', textTransform: 'uppercase', fontWeight: '600' }}>Community moderation</p>
+          <h2 style={{ fontSize: '1.5em', marginBottom: 0 }}>Pending stories ({stories.length})</h2>
+        </div>
+        <button onClick={onClose} className="icon-button" aria-label="Close moderation queue"><X size={24} /></button>
+      </div>
+      <div style={{ display: 'flex', flexDirection: 'row', flex: 1, overflow: 'hidden' }}>
+        <div style={{ width: '280px', borderRight: '1px solid #e5e5e5', overflowY: 'auto', backgroundColor: '#fafafa' }}>
+          {stories.map((story) => (
+            <button
+              key={story.id}
+              onClick={() => setSelectedStory(story)}
+              style={{
+                width: '100%',
+                padding: '12px 16px',
+                border: 'none',
+                borderBottom: '1px solid #e5e5e5',
+                backgroundColor: selectedStory?.id === story.id ? '#e8f5e9' : 'transparent',
+                cursor: 'pointer',
+                textAlign: 'left',
+                borderLeft: selectedStory?.id === story.id ? '3px solid #4caf50' : 'none',
+              }}
+            >
+              <div style={{ fontSize: '0.9em', fontWeight: '600' }}>{story.title}</div>
+              <div style={{ fontSize: '0.8em', color: '#666', marginTop: '4px' }}>{story.type}</div>
+            </button>
+          ))}
+        </div>
+        <div style={{ flex: 1, overflowY: 'auto', padding: '24px', display: 'flex', flexDirection: 'column' }}>
+          {selectedStory ? (
+            <>
+              <div>
+                <p style={{ fontSize: '0.85em', color: '#666', marginBottom: '4px', textTransform: 'uppercase', fontWeight: '600' }}>{selectedStory.type}</p>
+                <h3 style={{ fontSize: '1.3em', marginBottom: '8px' }}>{selectedStory.title}</h3>
+                <div style={{ display: 'flex', gap: '12px', marginBottom: '16px', flexWrap: 'wrap' }}>
+                  <span style={{ fontSize: '0.85em', padding: '4px 8px', backgroundColor: '#e3f2fd', borderRadius: '4px', color: '#1976d2' }}>{selectedStory.focus}</span>
+                  <span style={{ fontSize: '0.85em', padding: '4px 8px', backgroundColor: '#f3e5f5', borderRadius: '4px', color: '#7b1fa2' }}>{selectedStory.parish}</span>
+                  {selectedStory.isAnonymous && <span style={{ fontSize: '0.85em', padding: '4px 8px', backgroundColor: '#ffe0b2', borderRadius: '4px', color: '#e65100' }}>Anonymous</span>}
+                </div>
+                <p style={{ lineHeight: 1.6, marginBottom: '12px' }}>"{selectedStory.quote}"</p>
+                {selectedStory.lessonsLearned && <div style={{ padding: '12px', backgroundColor: '#f0f7ff', borderLeft: '3px solid #2196f3', marginBottom: '16px' }}>
+                  <p style={{ fontSize: '0.9em', color: '#1976d2', fontWeight: '600', marginBottom: '4px' }}>💡 Lessons learned</p>
+                  <p style={{ fontSize: '0.9em', marginBottom: 0 }}>{selectedStory.lessonsLearned}</p>
+                </div>}
+              </div>
+              <div style={{ marginTop: 'auto', display: 'flex', gap: '12px', paddingTop: '20px', borderTop: '1px solid #e5e5e5' }}>
+                <button className="button secondary" onClick={() => { onReject(selectedStory.id); if (stories.length > 1) setSelectedStory(stories.find((s) => s.id !== selectedStory.id) || null) }} style={{ flex: 1 }}>
+                  <X size={17} /> Reject
+                </button>
+                <button className="button primary" onClick={() => { onApprove(selectedStory.id); if (stories.length > 1) setSelectedStory(stories.find((s) => s.id !== selectedStory.id) || null) }} style={{ flex: 1 }}>
+                  <Check size={17} /> Approve & publish
+                </button>
+              </div>
+            </>
+          ) : (
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%', color: '#999' }}>
+              <div style={{ textAlign: 'center' }}>
+                <ShieldCheck size={40} style={{ marginBottom: '12px', opacity: 0.5 }} />
+                <p>No pending stories</p>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  </div>
 }
 
 export default App
