@@ -1,0 +1,19 @@
+<svg viewBox="0 0 200 240" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+  <!-- Shield -->
+  <path d="M 100 20 L 60 50 L 60 110 C 60 150 100 190 100 190 C 100 190 140 150 140 110 L 140 50 Z" 
+        fill="none" stroke="#001a47" stroke-width="4" stroke-linejoin="round"/>
+  
+  <!-- Eye circle -->
+  <circle cx="100" cy="95" r="18" fill="none" stroke="#001a47" stroke-width="3"/>
+  
+  <!-- Eye pupil -->
+  <circle cx="100" cy="95" r="8" fill="#001a47"/>
+  
+  <!-- Lightning bolt -->
+  <path d="M 110 70 L 125 85 L 115 95 L 130 120 L 100 100 L 110 90 Z" 
+        fill="#fed100" stroke="#001a47" stroke-width="2" stroke-linejoin="round"/>
+  
+  <!-- Text: WATCH OUT JA -->
+  <text x="100" y="160" font-family="Sora, sans-serif" font-size="20" font-weight="700" 
+        text-anchor="middle" fill="#000000">WATCH OUT JA</text>
+</svg>

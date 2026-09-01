@@ -332,7 +332,7 @@ function App() {
     <div className="app-shell">
       <header className="topbar">
         <button className="brand" onClick={() => navigate('home')} aria-label="Go to Watch Out JA home">
-          <span className="brand-mark">W</span>
+          <img src="/logo.svg" alt="Watch Out JA" className="brand-mark-logo" />
           <span><strong>Watch Out JA</strong><small>Stay aware. Stay ready.</small></span>
         </button>
         <nav className="desktop-nav" aria-label="Primary navigation">
